@@ -40,7 +40,9 @@ func login() {
 		menu_administrador()
 
 	} else {
-		fmt.Println("comprobando...")
+		/*comprobar := ListaNuevaEmpleados.validarEmpleado(nombre, password)
+		fmt.Println(comprobar)*/
+		fmt.Println("No se ha logeado con exito!!")
 
 	}
 

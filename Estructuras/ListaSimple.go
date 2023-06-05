@@ -77,6 +77,21 @@ func MostrarLista(lista *Lista) {
 	}
 }
 
+func (l *Lista) validarEmpleado(id int, password string) {
+	comprobacion := l.EstaVacia()
+	fmt.Println(comprobacion)
+	auxiliar := l.inicio
+	for auxiliar != nil {
+		if auxiliar.empleado.id == id {
+			if auxiliar.empleado.password == password {
+				fmt.Println("Bienvenido usuario")
+			}
+
+		}
+	}
+
+}
+
 func New_Lista() *Lista {
 	return &Lista{nil, 0}
 }
