@@ -1,10 +1,10 @@
 package Estructuras
 
 import (
-	//"io/ioutil"
 	"fmt"
+	"io/ioutil"
 	"os"
-	//"os/exec"
+	"os/exec"
 )
 
 /*
@@ -41,4 +41,12 @@ funcion escribirEnArch se encarga de sobrescribir en el archivo .dot
 */
 func escribirEnArch() {
 	fmt.Println("escribir en archivo")
+}
+
+func run(name_imagen string, name_archivo string) {
+	path, _ := exec.LookPath("dot")
+	cmd, _ := exec.Command(path, "-Tjpg", name_archivo).Output()
+	mode := 0777
+	_ = ioutil.WriteFile(name_imagen, cmd, os.FileMode(mode))
+
 }

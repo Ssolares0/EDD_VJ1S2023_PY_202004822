@@ -108,12 +108,12 @@ func (l *Lista) BuscarEmpleado(id int, password string) *Empleado {
 		return nil
 	}
 }
-func Grafico() {
+func Grafico(l *Lista) {
 	fmt.Println("Generando grafico")
 	name_archivo := "ListaEmpleados.dot"
-	/*
-		name_imagen := "ListaEmpleados.jpg"
-		txt := `digraph listaAlumnos{
+
+	name_imagen := "ListaEmpleados.jpg"
+	txt := `digraph listaAlumnos{
 			fontname="Arial,sans-serif"
 			node [fontname="Helvetica,Arial,sans-serif" shape=box style=filled fillcolor="red"]
 			layout=dot
@@ -122,11 +122,13 @@ func Grafico() {
 			edge [weight=1000 style="filled" color="blue"]
 			splines=ortho;
 			nodesep=0.6; `
-			aux := l.inicio
-			for aux != nil {
+	aux := l.inicio
+	count := 0
+	for aux != nil {
 
-			}*/
+	}
 	createArch(name_archivo)
+	escribirEnArch(txt, name_archivo)
 
 }
 
