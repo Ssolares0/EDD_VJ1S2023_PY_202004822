@@ -36,27 +36,36 @@ func login() {
 	scanner.Scan()
 	password := scanner.Text()
 	if nombre == "ADMIN_202004822" && password == "Admin" {
-		fmt.Println("Se ha logeado con exito!!")
+		fmt.Println("Se ha logeado con exito, bienvenido admin!!")
 		menu_administrador()
 
 	} else {
-		/*comprobar := ListaNuevaEmpleados.validarEmpleado(nombre, password)
-		fmt.Println(comprobar)*/
-		fmt.Println("No se ha logeado con exito!!")
+		id, _ := strconv.Atoi(nombre)
+
+		comprobar := ListaNuevaEmpleados.BuscarEmpleado(id, password)
+		if comprobar == nil {
+			fmt.Println("Usuario o contraseña incorrectos, intente de nuevo!!")
+
+		} else {
+			fmt.Println("Se ha logeado con exito!! Bienvenido: ", id)
+			menu_empleado()
+
+		}
 
 	}
 
 }
 func menu_administrador() {
 	var opc int = 0
-	for opc != 6 {
+	for opc != 7 {
 		fmt.Println("******MENU ADMINISTRADOR******")
 		fmt.Println("1. Cargar Empleados")
 		fmt.Println("2. Cargar Imagenes")
 		fmt.Println("3. Cargar Usuarios")
 		fmt.Println("4. Actualizar Cola")
 		fmt.Println("5. Reportes Estructuras")
-		fmt.Println("6. Salir del sistema")
+		fmt.Println("6. Salir del apartado de administrador")
+		fmt.Println("Ingrese una opción: ")
 		fmt.Scanln(&opc)
 
 		switch opc {
@@ -71,6 +80,8 @@ func menu_administrador() {
 			fmt.Println("Actualizar Cola")
 		case 5:
 			fmt.Println("Reportes Estructuras")
+		case 6:
+			menu_login()
 
 		}
 	}
@@ -89,6 +100,9 @@ func cargar_Empleados() {
 		fmt.Println(err)
 	}
 	records, err := csv.NewReader(file).ReadAll()
+	if err != nil {
+		return
+	}
 	for _, record := range records {
 		if record[0] == "id" {
 			continue
@@ -104,6 +118,29 @@ func cargar_Empleados() {
 func mostrarEmpleados() {
 	fmt.Println("*****************************************")
 	Estructuras.MostrarLista(ListaNuevaEmpleados)
+	//Estructuras.Grafico()
+}
+func menu_empleado() {
+	var opc int = 0
+	for opc != 4 {
+		fmt.Println("******MENU EMPLEADO******")
+		fmt.Println("1. Ver imagenes Cargadas")
+		fmt.Println("2. Realizar Pedido")
+		fmt.Println("3. Salir del apartado de empleado")
+		fmt.Println("4. Salir del sistema")
+		fmt.Println("Ingrese una opción: ")
+		fmt.Scanln(&opc)
+
+		switch opc {
+		case 1:
+			fmt.Println("Ver imagenes Cargadas")
+		case 2:
+			fmt.Println("Realizar Pedido")
+		case 3:
+			menu_login()
+
+		}
+	}
 }
 
 func main() {

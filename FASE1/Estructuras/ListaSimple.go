@@ -77,7 +77,7 @@ func MostrarLista(lista *Lista) {
 	}
 }
 
-func (l *Lista) validarEmpleado(id int, password string) {
+func (l *Lista) ValidarEmpleado(id int, password string) {
 	comprobacion := l.EstaVacia()
 	fmt.Println(comprobacion)
 	auxiliar := l.inicio
@@ -88,7 +88,45 @@ func (l *Lista) validarEmpleado(id int, password string) {
 			}
 
 		}
+
 	}
+
+}
+
+func (l *Lista) BuscarEmpleado(id int, password string) *Empleado {
+	comprobacion := l.EstaVacia()
+	if comprobacion {
+		return nil
+	} else {
+		auxiliar := l.inicio
+		for auxiliar != nil {
+			if auxiliar.empleado.id == id && auxiliar.empleado.password == password {
+				return auxiliar.empleado
+			}
+			auxiliar = auxiliar.siguiente
+		}
+		return nil
+	}
+}
+func Grafico() {
+	fmt.Println("Generando grafico")
+	name_archivo := "ListaEmpleados.dot"
+	/*
+		name_imagen := "ListaEmpleados.jpg"
+		txt := `digraph listaAlumnos{
+			fontname="Arial,sans-serif"
+			node [fontname="Helvetica,Arial,sans-serif" shape=box style=filled fillcolor="red"]
+			layout=dot
+			label="Lista de estudiantes"
+			labelloc = t
+			edge [weight=1000 style="filled" color="blue"]
+			splines=ortho;
+			nodesep=0.6; `
+			aux := l.inicio
+			for aux != nil {
+
+			}*/
+	createArch(name_archivo)
 
 }
 
