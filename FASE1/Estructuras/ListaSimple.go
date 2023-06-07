@@ -2,6 +2,7 @@ package Estructuras
 
 import (
 	"fmt"
+	"strconv"
 )
 
 /*
@@ -108,27 +109,32 @@ func (l *Lista) BuscarEmpleado(id int, password string) *Empleado {
 		return nil
 	}
 }
-func Grafico(l *Lista) {
+func (l *Lista) Grafico() {
 	fmt.Println("Generando grafico")
 	name_archivo := "ListaEmpleados.dot"
 
 	name_imagen := "ListaEmpleados.jpg"
-	txt := `digraph listaAlumnos{
-			fontname="Arial,sans-serif"
-			node [fontname="Helvetica,Arial,sans-serif" shape=box style=filled fillcolor="red"]
-			layout=dot
-			label="Lista de estudiantes"
-			labelloc = t
-			edge [weight=1000 style="filled" color="blue"]
-			splines=ortho;
-			nodesep=0.6; `
+	txt := "digraph ListaSimple{\n"
+	txt += "rankdir=LR;\n"
+	txt += "node[shape = oval];\n"
+	txt += "nodonull2[label=\"null\"];\n"
 	aux := l.inicio
 	count := 0
-	for aux != nil {
 
+	for i := 0; i < l.longitud; i++ {
+		txt = txt + "nodo" + strconv.Itoa(i) + "[label=\"" + aux.empleado.nombre + "\n" + "ID: " + strconv.Itoa(aux.empleado.id) + " \"];\n"
+		aux = aux.siguiente
 	}
+	for i := 0; i < l.longitud-1; i++ {
+		c := i + 1
+		txt += "nodo" + strconv.Itoa(i) + "->nodo" + strconv.Itoa(c) + ";\n"
+		count += 1
+	}
+	txt += "nodo" + strconv.Itoa(count) + "->nodonull2;\n"
+	txt += "}"
 	createArch(name_archivo)
 	escribirEnArch(txt, name_archivo)
+	run(name_imagen, name_archivo)
 
 }
 

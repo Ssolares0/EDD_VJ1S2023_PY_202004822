@@ -118,7 +118,8 @@ func cargar_Empleados() {
 func mostrarEmpleados() {
 	fmt.Println("*****************************************")
 	Estructuras.MostrarLista(ListaNuevaEmpleados)
-	//Estructuras.Grafico()
+	ListaNuevaEmpleados.Grafico()
+
 }
 func menu_empleado() {
 	var opc int = 0

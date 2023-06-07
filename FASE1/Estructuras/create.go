@@ -39,8 +39,23 @@ func createArch(nombre string) {
 /*
 funcion escribirEnArch se encarga de sobrescribir en el archivo .dot
 */
-func escribirEnArch() {
-	fmt.Println("escribir en archivo")
+func escribirEnArch(texto string, name_archivo string) {
+	var file, err = os.OpenFile(name_archivo, os.O_RDWR, 0644)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+	// Escribimos texto linea por linea
+	_, err = file.WriteString(texto)
+	if err != nil {
+		return
+	}
+	// Guarda cambios del archivo
+	err = file.Sync()
+	if err != nil {
+		return
+	}
+	fmt.Println("Archivo modificado existosamente.")
 }
 
 func run(name_imagen string, name_archivo string) {
