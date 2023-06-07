@@ -20,3 +20,7 @@ type Lista_circularSimp struct {
 
 	longitud int
 }
+
+func ya() {
+	fmt.Println("ya")
+}

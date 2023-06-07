@@ -111,9 +111,9 @@ func (l *Lista) BuscarEmpleado(id int, password string) *Empleado {
 }
 func (l *Lista) Grafico() {
 	fmt.Println("Generando grafico")
-	name_archivo := "ListaEmpleados.dot"
+	name_archivo := "Reportes/ListaEmpleados.dot"
 
-	name_imagen := "ListaEmpleados.jpg"
+	name_imagen := "Reportes/ListaEmpleados.jpg"
 	txt := "digraph ListaSimple{\n"
 	txt += "rankdir=LR;\n"
 	txt += "node[shape = oval];\n"

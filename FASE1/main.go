@@ -10,6 +10,7 @@ import (
 )
 
 var ListaNuevaEmpleados = Estructuras.New_Lista()
+var ListaNuevaImagenes = Estructuras.New_ListaDoble()
 
 func menu_login() {
 	var opc int = 0
@@ -74,6 +75,7 @@ func menu_administrador() {
 			cargar_Empleados()
 		case 2:
 			fmt.Println("Cargar Imagenes")
+			cargar_Imagenes()
 		case 3:
 			fmt.Println("Cargar Usuarios")
 		case 4:
@@ -115,10 +117,44 @@ func cargar_Empleados() {
 
 }
 
+func cargar_Imagenes() {
+	fmt.Println("carga masiva de Imagenes")
+	fmt.Println("ingrese la ruta del archivo csv")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	nombre := scanner.Text()
+	fmt.Println(nombre)
+
+	file, err := os.Open(nombre)
+	if err != nil {
+		fmt.Println(err)
+	}
+	records, err := csv.NewReader(file).ReadAll()
+	if err != nil {
+		return
+	}
+	for _, record := range records {
+		if (record[0] == "imagen") || (record[0] == "Imagen") {
+			continue
+		}
+
+		sv, _ := strconv.Atoi(record[1])
+		ListaNuevaImagenes.AgregarImagen(record[0], sv)
+	}
+	mostarImagenesCargadas()
+
+}
+
 func mostrarEmpleados() {
 	fmt.Println("*****************************************")
 	Estructuras.MostrarLista(ListaNuevaEmpleados)
 	ListaNuevaEmpleados.Grafico()
+
+}
+func mostarImagenesCargadas() {
+	fmt.Println("*****************************************")
+	Estructuras.MostrarListaDoble(ListaNuevaImagenes)
+	ListaNuevaImagenes.GraficoDoble()
 
 }
 func menu_empleado() {

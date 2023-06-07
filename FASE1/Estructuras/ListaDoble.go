@@ -1,14 +1,16 @@
 package Estructuras
 
-type Empleado2 struct {
-	nombre   string
-	id       int
-	cargo    string
-	password string
+import (
+	"strconv"
+)
+
+type Imagen struct {
+	nombre string
+	capas  int
 }
 
 type NodoDoble struct {
-	empleado  *Empleado
+	imagen    *Imagen
 	siguiente *NodoDoble
 	anterior  *NodoDoble
 }
@@ -22,11 +24,11 @@ func (l *ListaDoble) validar_vacia() bool {
 	return l.longitud == 0
 }
 
-func (l *ListaDoble) AgregarEmpleado(nombre string, id int, cargo string, password string) {
-	nuevoEmpleado := &Empleado{nombre, id, cargo, password}
+func (l *ListaDoble) AgregarImagen(nombre string, capas int) {
+	nuevoImagen := &Imagen{nombre, capas}
 
 	if l.validar_vacia() {
-		l.inicio = &NodoDoble{nuevoEmpleado, nil, nil}
+		l.inicio = &NodoDoble{nuevoImagen, nil, nil}
 		l.longitud++
 
 	} else {
@@ -34,8 +36,51 @@ func (l *ListaDoble) AgregarEmpleado(nombre string, id int, cargo string, passwo
 		for aux.siguiente != nil {
 			aux = aux.siguiente
 		}
-		aux.siguiente = &NodoDoble{nuevoEmpleado, nil, aux}
+		aux.siguiente = &NodoDoble{nuevoImagen, nil, aux}
 		l.longitud++
 
 	}
+}
+
+func MostrarListaDoble(l *ListaDoble) {
+	auxiliar := l.inicio
+	for auxiliar != nil {
+		println(auxiliar.imagen.nombre)
+		println(auxiliar.imagen.capas)
+		println("------------------------")
+		auxiliar = auxiliar.siguiente
+	}
+}
+
+func (l *ListaDoble) GraficoDoble() {
+	name_archivo := "Reportes/ListaImagenes.dot"
+	name_imagen := "Reportes/ListaImagenes.jpg"
+	texto := "digraph lista{\n"
+	texto += "rankdir=LR;\n"
+	texto += "node[shape = record];\n"
+	texto += "nodonull1[label=\"null\"];\n"
+	texto += "nodonull2[label=\"null\"];\n"
+	aux := l.inicio
+	contador := 0
+	texto += "nodonull1->nodo0 [dir=back];\n"
+	for i := 0; i < l.longitud; i++ {
+		texto += "nodo" + strconv.Itoa(i) + "[label=\"" + aux.imagen.nombre + "\"];\n"
+		aux = aux.siguiente
+	}
+	for i := 0; i < l.longitud-1; i++ {
+		c := i + 1
+		texto += "nodo" + strconv.Itoa(i) + "->nodo" + strconv.Itoa(c) + ";\n"
+		texto += "nodo" + strconv.Itoa(c) + "->nodo" + strconv.Itoa(i) + ";\n"
+		contador = c
+	}
+	texto += "nodo" + strconv.Itoa(contador) + "->nodonull2;\n"
+	texto += "}"
+	createArch(name_archivo)
+	escribirEnArch(texto, name_archivo)
+	run(name_imagen, name_archivo)
+
+}
+
+func New_ListaDoble() *ListaDoble {
+	return &ListaDoble{nil, 0}
 }
