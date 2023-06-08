@@ -1,6 +1,9 @@
 package Estructuras
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 //"fmt"
 
@@ -32,10 +35,12 @@ func (l *Lista_circularSimp) AgregarCliente(id int, nombre string) {
 		l.longitud++
 
 	} else {
-		auxiliar := l.inicio
+
 		if l.longitud == 1 {
 			l.inicio.siguiente = &Nodo_circularSimp{cliente: nuevoCliente, siguiente: l.inicio}
+			l.longitud++
 		} else {
+			auxiliar := l.inicio
 			for i := 0; i < l.longitud-1; i++ {
 				auxiliar = auxiliar.siguiente
 			}
@@ -58,4 +63,32 @@ func MostrarListaCircular(l *Lista_circularSimp) {
 
 func New_Lista_circularSimp() *Lista_circularSimp {
 	return &Lista_circularSimp{nil, 0}
+}
+
+func (l *Lista_circularSimp) GraficoCircular() {
+	fmt.Println("Generando grafico")
+	name_archivo := "Reportes/ListaClientes.dot"
+
+	name_imagen := "Reportes/ListaClientes.jpg"
+	txt := "digraph ListaSimple{\n"
+	txt += "rankdir=LR;\n"
+	txt += "node[shape = oval];\n"
+	aux := l.inicio
+	count := 0
+
+	for i := 0; i < l.longitud; i++ {
+		txt = txt + "nodo" + strconv.Itoa(i) + "[label=\"" + aux.cliente.nombre + "\n" + "ID: " + strconv.Itoa(aux.cliente.id) + " \"];\n"
+		aux = aux.siguiente
+	}
+	for i := 0; i < l.longitud-1; i++ {
+		c := i + 1
+		txt += "nodo" + strconv.Itoa(i) + "->nodo" + strconv.Itoa(c) + ";\n"
+		count += 1
+	}
+	txt += "nodo" + strconv.Itoa(count) + "->nodo0;\n"
+	txt += "}"
+	createArch(name_archivo)
+	escribirEnArch(txt, name_archivo)
+	run(name_imagen, name_archivo)
+
 }

@@ -2,19 +2,5 @@ digraph ListaSimple{
 rankdir=LR;
 node[shape = oval];
 nodonull2[label="null"];
-nodo0[label="sebastian Solares
-ID: 5151 "];
-nodo1[label="Juan Mendoza
-ID: 3333 "];
-nodo2[label="Luis Perez
-ID: 2423 "];
-nodo3[label="Angel Rustrian
-ID: 1262 "];
-nodo4[label="Josue Tok
-ID: 0 "];
-nodo0->nodo1;
-nodo1->nodo2;
-nodo2->nodo3;
-nodo3->nodo4;
-nodo4->nodonull2;
+nodo0->nodonull2;
 }

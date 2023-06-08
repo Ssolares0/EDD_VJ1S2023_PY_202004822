@@ -86,6 +86,7 @@ func menu_administrador() {
 			fmt.Println("Reportes Estructuras")
 			ListaNuevaEmpleados.Grafico()
 			ListaNuevaImagenes.GraficoDoble()
+			ListaNuevaClientes.GraficoCircular()
 
 		case 6:
 			menu_login()
