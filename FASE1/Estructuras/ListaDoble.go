@@ -1,7 +1,9 @@
 package Estructuras
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strconv"
 )
 
@@ -50,6 +52,14 @@ func MostrarListaDoble(l *ListaDoble) {
 		println("------------------------")
 		auxiliar = auxiliar.siguiente
 	}
+	fmt.Println("Ingrese el nombre de la imagen que desea seleccionar")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	seleccionada := scanner.Text()
+
+	ruta := "C:/FASE1/csv/" + seleccionada + "/inicial.csv"
+	fmt.Println("La ruta es:  " + ruta)
+
 }
 
 func (l *ListaDoble) GraficoDoble() {
