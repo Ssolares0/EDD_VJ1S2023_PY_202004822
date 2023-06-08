@@ -11,6 +11,7 @@ import (
 
 var ListaNuevaEmpleados = Estructuras.New_Lista()
 var ListaNuevaImagenes = Estructuras.New_ListaDoble()
+var ListaNuevaClientes = Estructuras.New_Lista_circularSimp()
 
 func menu_login() {
 	var opc int = 0
@@ -62,7 +63,7 @@ func menu_administrador() {
 		fmt.Println("******MENU ADMINISTRADOR******")
 		fmt.Println("1. Cargar Empleados")
 		fmt.Println("2. Cargar Imagenes")
-		fmt.Println("3. Cargar Usuarios")
+		fmt.Println("3. Cargar Clientes")
 		fmt.Println("4. Actualizar Cola")
 		fmt.Println("5. Reportes Estructuras")
 		fmt.Println("6. Salir del apartado de administrador")
@@ -77,11 +78,15 @@ func menu_administrador() {
 			fmt.Println("Cargar Imagenes")
 			cargar_Imagenes()
 		case 3:
-			fmt.Println("Cargar Usuarios")
+			fmt.Println("Cargar Clientes")
+			cargar_Clientes()
 		case 4:
 			fmt.Println("Actualizar Cola")
 		case 5:
 			fmt.Println("Reportes Estructuras")
+			ListaNuevaEmpleados.Grafico()
+			ListaNuevaImagenes.GraficoDoble()
+
 		case 6:
 			menu_login()
 
@@ -141,20 +146,47 @@ func cargar_Imagenes() {
 		sv, _ := strconv.Atoi(record[1])
 		ListaNuevaImagenes.AgregarImagen(record[0], sv)
 	}
-	mostarImagenesCargadas()
 
+}
+
+func cargar_Clientes() {
+	fmt.Println("carga masiva de Clientes")
+	fmt.Println("ingrese la ruta del archivo csv")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	nombre := scanner.Text()
+	file, err := os.Open(nombre)
+
+	if err != nil {
+		return
+	}
+	records, err := csv.NewReader(file).ReadAll()
+	if err != nil {
+		return
+	}
+	for _, record := range records {
+		if record[0] == "id" {
+			continue
+		}
+		sv, _ := strconv.Atoi(record[0])
+		ListaNuevaClientes.AgregarCliente(sv, record[1])
+	}
+	mostrarClientesCargados()
 }
 
 func mostrarEmpleados() {
 	fmt.Println("*****************************************")
 	Estructuras.MostrarLista(ListaNuevaEmpleados)
-	ListaNuevaEmpleados.Grafico()
 
 }
 func mostarImagenesCargadas() {
 	fmt.Println("*****************************************")
 	Estructuras.MostrarListaDoble(ListaNuevaImagenes)
-	ListaNuevaImagenes.GraficoDoble()
+
+}
+func mostrarClientesCargados() {
+	fmt.Println("*****************************************")
+	Estructuras.MostrarListaCircular(ListaNuevaClientes)
 
 }
 func menu_empleado() {
@@ -170,7 +202,9 @@ func menu_empleado() {
 
 		switch opc {
 		case 1:
-			fmt.Println("Ver imagenes Cargadas")
+			fmt.Println("****Ver imagenes Cargadas****")
+			mostarImagenesCargadas()
+
 		case 2:
 			fmt.Println("Realizar Pedido")
 		case 3:

@@ -1,6 +1,7 @@
 package Estructuras
 
 import (
+	"fmt"
 	"strconv"
 )
 
@@ -45,8 +46,7 @@ func (l *ListaDoble) AgregarImagen(nombre string, capas int) {
 func MostrarListaDoble(l *ListaDoble) {
 	auxiliar := l.inicio
 	for auxiliar != nil {
-		println(auxiliar.imagen.nombre)
-		println(auxiliar.imagen.capas)
+		fmt.Printf("Nombre de la imagen: %s, Capa: %d \n", auxiliar.imagen.nombre, auxiliar.imagen.capas)
 		println("------------------------")
 		auxiliar = auxiliar.siguiente
 	}
