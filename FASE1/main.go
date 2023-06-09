@@ -12,6 +12,7 @@ import (
 var ListaNuevaEmpleados = Estructuras.New_Lista()
 var ListaNuevaImagenes = Estructuras.New_ListaDoble()
 var ListaNuevaClientes = Estructuras.New_Lista_circularSimp()
+var ListaNuevaClientesPend = Estructuras.New_ListaCola()
 
 func menu_login() {
 	var opc int = 0
@@ -82,11 +83,13 @@ func menu_administrador() {
 			cargar_Clientes()
 		case 4:
 			fmt.Println("Actualizar Cola")
+			actualizar_Cola()
 		case 5:
 			fmt.Println("Reportes Estructuras")
 			ListaNuevaEmpleados.Grafico()
 			ListaNuevaImagenes.GraficoDoble()
 			ListaNuevaClientes.GraficoCircular()
+			ListaNuevaClientesPend.GraficarCola()
 
 		case 6:
 			menu_login()
@@ -140,7 +143,7 @@ func cargar_Imagenes() {
 		return
 	}
 	for _, record := range records {
-		if (record[0] == "imagen") || (record[0] == "Imagen") {
+		if (record[0] == "Layer") || (record[0] == "layer") {
 			continue
 		}
 
@@ -175,6 +178,35 @@ func cargar_Clientes() {
 	mostrarClientesCargados()
 }
 
+func actualizar_Cola() {
+	fmt.Println("Actualizando Cola")
+	fmt.Println("ingrese la ruta del archivo csv")
+
+	fmt.Println("carga masiva de Clientes en cola")
+	fmt.Println("ingrese la ruta del archivo csv")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	nombre := scanner.Text()
+	file, err := os.Open(nombre)
+
+	if err != nil {
+		return
+	}
+	records, err := csv.NewReader(file).ReadAll()
+	if err != nil {
+		return
+	}
+	for _, record := range records {
+		if record[0] == "id" {
+			continue
+		}
+		ListaNuevaClientesPend.Colar(record[0], record[1])
+
+	}
+	mostrarClientesencola()
+
+}
+
 func mostrarEmpleados() {
 	fmt.Println("*****************************************")
 	Estructuras.MostrarLista(ListaNuevaEmpleados)
@@ -188,6 +220,12 @@ func mostarImagenesCargadas() {
 func mostrarClientesCargados() {
 	fmt.Println("*****************************************")
 	Estructuras.MostrarListaCircular(ListaNuevaClientes)
+
+}
+
+func mostrarClientesencola() {
+	fmt.Println("*****************************************")
+	Estructuras.MostrarCola(ListaNuevaClientesPend)
 
 }
 func menu_empleado() {
@@ -208,6 +246,7 @@ func menu_empleado() {
 
 		case 2:
 			fmt.Println("Realizar Pedido")
+
 		case 3:
 			menu_login()
 

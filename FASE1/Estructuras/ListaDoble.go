@@ -2,6 +2,7 @@ package Estructuras
 
 import (
 	"bufio"
+	"encoding/csv"
 	"fmt"
 	"os"
 	"strconv"
@@ -52,13 +53,7 @@ func MostrarListaDoble(l *ListaDoble) {
 		println("------------------------")
 		auxiliar = auxiliar.siguiente
 	}
-	fmt.Println("Ingrese el nombre de la imagen que desea seleccionar")
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	seleccionada := scanner.Text()
-
-	ruta := "C:/FASE1/csv/" + seleccionada + "/inicial.csv"
-	fmt.Println("La ruta es:  " + ruta)
+	GenerarImagen()
 
 }
 
@@ -89,6 +84,39 @@ func (l *ListaDoble) GraficoDoble() {
 	escribirEnArch(texto, name_archivo)
 	run(name_imagen, name_archivo)
 
+}
+func GenerarImagen() {
+	Layer := []int{}
+	File := []string{}
+
+	fmt.Println("Ingrese el nombre de la imagen que desea seleccionar")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	seleccionada := scanner.Text()
+
+	ruta := "csv/" + seleccionada + "/inicial.csv"
+	fmt.Println("La ruta es:  " + ruta)
+
+	file, err := os.Open(ruta)
+	if err != nil {
+		fmt.Println(err)
+	}
+	records, err := csv.NewReader(file).ReadAll()
+	if err != nil {
+		return
+	}
+	for _, record := range records {
+		if (record[0] == "Layer") || (record[0] == "layer") {
+			continue
+		}
+
+		sv, _ := strconv.Atoi(record[0])
+		Layer = append(Layer, sv)
+		File = append(File, record[1])
+
+	}
+	fmt.Println("Layer:  ", Layer)
+	fmt.Println("File:  ", File)
 }
 
 func New_ListaDoble() *ListaDoble {
