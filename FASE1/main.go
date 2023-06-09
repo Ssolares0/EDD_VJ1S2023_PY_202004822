@@ -209,6 +209,7 @@ func actualizar_Cola() {
 
 func mostrarEmpleados() {
 	fmt.Println("*****************************************")
+	fmt.Println("pruebaa")
 	Estructuras.MostrarLista(ListaNuevaEmpleados)
 
 }
