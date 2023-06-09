@@ -143,7 +143,7 @@ func cargar_Imagenes() {
 		return
 	}
 	for _, record := range records {
-		if (record[0] == "I") || (record[0] == "imagen") {
+		if (record[0] == "Imagen") || (record[0] == "imagen") {
 			continue
 		}
 
