@@ -161,11 +161,8 @@ func GenerarImagen() {
 			}
 			modoRecursivo(image_width, image_height, pixel_width, pixel_height)
 
-		}
-
-		if Layer[i] == 1 {
-			fmt.Println("La cuerpo es:  " + File[i])
-
+		} else {
+			fmt.Println("La capa es:  ", Layer[i], File[i])
 		}
 
 	}
