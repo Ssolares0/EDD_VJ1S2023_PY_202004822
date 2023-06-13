@@ -57,6 +57,15 @@ func MostrarListaDoble(l *ListaDoble) {
 
 }
 
+func MostrarNormal(l *ListaDoble) {
+	auxiliar := l.inicio
+	for auxiliar != nil {
+		fmt.Printf("Nombre de la imagen: %s, Capa: %d \n", auxiliar.imagen.nombre, auxiliar.imagen.capas)
+		println("------------------------")
+		auxiliar = auxiliar.siguiente
+	}
+}
+
 func (l *ListaDoble) GraficoDoble() {
 	name_archivo := "Reportes/ListaImagenes.dot"
 	name_imagen := "Reportes/ListaImagenes.jpg"
@@ -159,7 +168,8 @@ func GenerarImagen() {
 				}
 
 			}
-			modoRecursivo(image_width, image_height, pixel_width, pixel_height)
+			//NewMatriz.AgregarValues(image_width, image_height, pixel_width, pixel_height)
+			fmt.Println(image_width, image_height, pixel_width, pixel_height)
 
 		} else {
 			fmt.Println("La capa es:  ", Layer[i], File[i])

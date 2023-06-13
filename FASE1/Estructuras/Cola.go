@@ -8,27 +8,27 @@ import (
 // "strconv"
 
 type Clientes struct {
-	id     string
-	nombre string
+	Id     string
+	Nombre string
 }
 
 // creamos el nodo cola
 type NodoCola struct {
-	cliente   *Clientes
-	siguiente *NodoCola
+	Cliente   *Clientes
+	Siguiente *NodoCola
 }
 
 // creamos la estructura de la cola
 
 type Lista_cola struct {
-	inicio   *NodoCola
-	longitud int
+	Inicio   *NodoCola
+	Longitud int
 }
 
 //validar si esta vacia
 
 func (l *Lista_cola) EstaVacia() bool {
-	if l.longitud == 0 {
+	if l.Longitud == 0 {
 		return true
 	} else {
 		return false
@@ -42,18 +42,18 @@ func (l *Lista_cola) Colar(id string, nombre string) {
 	comprobacion := l.EstaVacia()
 	if comprobacion {
 		nuevoCliente := &Clientes{id, nombre}
-		l.inicio = nuevoNodo(nuevoCliente)
-		l.longitud++
+		l.Inicio = nuevoNodo(nuevoCliente)
+		l.Longitud++
 
 	} else {
-		aux := l.inicio
-		for aux.siguiente != nil {
-			aux = aux.siguiente
+		aux := l.Inicio
+		for aux.Siguiente != nil {
+			aux = aux.Siguiente
 		}
 		nuevoCliente := &Clientes{id, nombre}
-		aux.siguiente = nuevoNodo(nuevoCliente)
-		aux.siguiente.siguiente = nil
-		l.longitud++
+		aux.Siguiente = nuevoNodo(nuevoCliente)
+		aux.Siguiente.Siguiente = nil
+		l.Longitud++
 	}
 }
 
@@ -61,16 +61,16 @@ func (l *Lista_cola) Descolar() {
 	if l.EstaVacia() {
 		println("La lista esta vacia")
 	} else {
-		l.inicio = l.inicio.siguiente
-		l.longitud--
+		l.Inicio = l.Inicio.Siguiente
+		l.Longitud--
 	}
 }
 
 func MostrarCola(l *Lista_cola) {
-	aux := l.inicio
+	aux := l.Inicio
 	for aux != nil {
-		println("Id: " + aux.cliente.id + " Nombre: " + aux.cliente.nombre)
-		aux = aux.siguiente
+		println("Id: " + aux.Cliente.Id + " Nombre: " + aux.Cliente.Nombre)
+		aux = aux.Siguiente
 	}
 }
 
@@ -81,25 +81,25 @@ func (c *Lista_cola) GraficarCola() {
 	texto += "rankdir=LR;\n"
 	texto += "node[shape = record];\n"
 	texto += "nodonull2[label=\"null\"];\n"
-	aux := c.inicio
+	aux := c.Inicio
 	contador := 0
-	if c.longitud == 1 {
+	if c.Longitud == 1 {
 		return
 	}
 	for aux != nil {
-		texto = texto + "nodo" + strconv.Itoa(contador) + "[label=\"{" + aux.cliente.id + "|" + aux.cliente.nombre + " }\"];\n"
-		aux = aux.siguiente
+		texto = texto + "nodo" + strconv.Itoa(contador) + "[label=\"{" + aux.Cliente.Id + "|" + aux.Cliente.Nombre + " }\"];\n"
+		aux = aux.Siguiente
 		contador += 1
 	}
 
 	contador = 0
-	aux = c.inicio
+	aux = c.Inicio
 
 	for aux != nil {
 		texto = texto + "nodo" + strconv.Itoa(contador) + "->nodo" + strconv.Itoa(contador+1) + ";\n"
-		aux = aux.siguiente
+		aux = aux.Siguiente
 		contador += 1
-		if aux.siguiente == nil {
+		if aux.Siguiente == nil {
 			break
 		}
 	}

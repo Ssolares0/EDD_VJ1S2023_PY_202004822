@@ -5,16 +5,22 @@ import (
 	"bufio"
 	"encoding/csv"
 	"fmt"
+	"math/rand"
 	"os"
 	"strconv"
+	"time"
 )
 
 var ListaNuevaEmpleados = Estructuras.New_Lista()
 var ListaNuevaImagenes = Estructuras.New_ListaDoble()
 var ListaNuevaClientes = Estructuras.New_Lista_circularSimp()
 var ListaNuevaClientesPend = Estructuras.New_ListaCola()
+var ListaNuevaPila = Estructuras.New_Lista_pila()
+var ListaNuevaDispersa = Estructuras.NewMatriz()
+var ListaNuevaPedidos = Estructuras.New_Lista_pila()
 
 func menu_login() {
+
 	var opc int = 0
 	for opc != 2 {
 		fmt.Println("******LOGIN******")
@@ -31,6 +37,7 @@ func menu_login() {
 
 }
 func login() {
+
 	fmt.Print("Ingresa tu usuario: ")
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
@@ -43,14 +50,14 @@ func login() {
 		menu_administrador()
 
 	} else {
-		id, _ := strconv.Atoi(nombre)
+		IDEMPLEADO, _ := strconv.Atoi(nombre)
 
-		comprobar := ListaNuevaEmpleados.BuscarEmpleado(id, password)
+		comprobar := ListaNuevaEmpleados.BuscarEmpleado(IDEMPLEADO, password)
 		if comprobar == nil {
 			fmt.Println("Usuario o contraseña incorrectos, intente de nuevo!!")
 
 		} else {
-			fmt.Println("Se ha logeado con exito!! Bienvenido: ", id)
+			fmt.Println("Se ha logeado con exito!! Bienvenido: ", IDEMPLEADO)
 			menu_empleado()
 
 		}
@@ -90,6 +97,7 @@ func menu_administrador() {
 			ListaNuevaImagenes.GraficoDoble()
 			ListaNuevaClientes.GraficoCircular()
 			ListaNuevaClientesPend.GraficarCola()
+			ListaNuevaPila.GraficarPila()
 
 		case 6:
 			menu_login()
@@ -179,6 +187,9 @@ func cargar_Clientes() {
 }
 
 func actualizar_Cola() {
+
+	//Nuevos := []string{}
+	//NuevosId := []int{}
 	fmt.Println("Actualizando Cola")
 	fmt.Println("ingrese la ruta del archivo csv")
 
@@ -200,6 +211,7 @@ func actualizar_Cola() {
 		if record[0] == "id" {
 			continue
 		}
+
 		ListaNuevaClientesPend.Colar(record[0], record[1])
 
 	}
@@ -229,6 +241,75 @@ func mostrarClientesencola() {
 	Estructuras.MostrarCola(ListaNuevaClientesPend)
 
 }
+
+func realizarPedido(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circularSimp) {
+	fmt.Println("*****************************************")
+	fmt.Println("Realizar Pedido")
+
+	existente := verificarCola(ListaNuevaClientesPend, ListaNuevaClientes)
+	if existente && cActual.Inicio != nil {
+		fmt.Println("El usuario actual es: ", cActual.Inicio.Cliente.Nombre)
+		Estructuras.MostrarNormal(ListaNuevaImagenes)
+		fmt.Println("Eliga una pelicula: ")
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		nombrepelicula := scanner.Text()
+		ListaNuevaPila.Push(cActual.Inicio.Cliente.Id, nombrepelicula)
+
+		cActual.Descolar()
+
+	} else if !existente && cActual.Inicio != nil {
+		// Inicializar el generador de números aleatorios con una semilla única
+		rand.Seed(time.Now().UnixNano())
+
+		// Generar un número aleatorio de 4 dígitos
+		numeroAleatorio := rand.Intn(9000) + 1000
+
+		fmt.Println(numeroAleatorio)
+		fmt.Println("El usuario actual es: ", cActual.Inicio.Cliente.Nombre)
+		ListaNuevaClientes.AgregarCliente(numeroAleatorio, cActual.Inicio.Cliente.Nombre)
+		Estructuras.MostrarListaDoble(ListaNuevaImagenes)
+
+		fmt.Println("Eliga una pelicula: ")
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		nombrepelicula := scanner.Text()
+		ListaNuevaPila.Push(cActual.Inicio.Cliente.Id, nombrepelicula)
+		cActual.Descolar()
+
+	} else if cActual.Inicio == nil {
+		fmt.Println("La cola esta vacia")
+	}
+
+}
+
+func verificarCola(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circularSimp) bool {
+	fmt.Println("verificando cola")
+	aux := cActual.Inicio
+	aux2 := cli.Inicio
+	for aux != nil {
+		if aux.Cliente.Id != "X" {
+			for i := 0; i < cli.Longitud; i++ {
+				sv, _ := strconv.Atoi(aux.Cliente.Id)
+				if sv == aux2.Cliente.Id {
+					fmt.Println("Cliente encontrado")
+
+					return true
+				}
+				aux2 = aux2.Siguiente
+			}
+
+		} else {
+			fmt.Println("Cliente Nuevo")
+			return false
+
+		}
+		aux = aux.Siguiente
+	}
+
+	return false
+}
+
 func menu_empleado() {
 	var opc int = 0
 	for opc != 4 {
@@ -247,6 +328,7 @@ func menu_empleado() {
 
 		case 2:
 			fmt.Println("Realizar Pedido")
+			realizarPedido(ListaNuevaClientesPend, ListaNuevaClientes)
 
 		case 3:
 			menu_login()

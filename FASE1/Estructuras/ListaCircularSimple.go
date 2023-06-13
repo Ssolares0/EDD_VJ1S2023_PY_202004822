@@ -8,44 +8,44 @@ import (
 //"fmt"
 
 type Cliente struct {
-	id     int
+	Id     int
 	nombre string
 }
 
 type Nodo_circularSimp struct {
-	cliente   *Cliente
-	siguiente *Nodo_circularSimp
+	Cliente   *Cliente
+	Siguiente *Nodo_circularSimp
 }
 
 func (l *Lista_circularSimp) validar_vacia2() bool {
-	return l.longitud == 0
+	return l.Longitud == 0
 }
 
 // creamos la esctructura de la lista circular simple
 type Lista_circularSimp struct {
-	inicio   *Nodo_circularSimp
-	longitud int
+	Inicio   *Nodo_circularSimp
+	Longitud int
 }
 
 func (l *Lista_circularSimp) AgregarCliente(id int, nombre string) {
 	nuevoCliente := &Cliente{id, nombre}
 	if l.validar_vacia2() {
-		l.inicio = &Nodo_circularSimp{cliente: nuevoCliente, siguiente: nil}
-		l.inicio.siguiente = l.inicio
-		l.longitud++
+		l.Inicio = &Nodo_circularSimp{Cliente: nuevoCliente, Siguiente: nil}
+		l.Inicio.Siguiente = l.Inicio
+		l.Longitud++
 
 	} else {
 
-		if l.longitud == 1 {
-			l.inicio.siguiente = &Nodo_circularSimp{cliente: nuevoCliente, siguiente: l.inicio}
-			l.longitud++
+		if l.Longitud == 1 {
+			l.Inicio.Siguiente = &Nodo_circularSimp{Cliente: nuevoCliente, Siguiente: l.Inicio}
+			l.Longitud++
 		} else {
-			auxiliar := l.inicio
-			for i := 0; i < l.longitud-1; i++ {
-				auxiliar = auxiliar.siguiente
+			auxiliar := l.Inicio
+			for i := 0; i < l.Longitud-1; i++ {
+				auxiliar = auxiliar.Siguiente
 			}
-			auxiliar.siguiente = &Nodo_circularSimp{cliente: nuevoCliente, siguiente: l.inicio}
-			l.longitud++
+			auxiliar.Siguiente = &Nodo_circularSimp{Cliente: nuevoCliente, Siguiente: l.Inicio}
+			l.Longitud++
 		}
 
 	}
@@ -53,12 +53,23 @@ func (l *Lista_circularSimp) AgregarCliente(id int, nombre string) {
 }
 
 func MostrarListaCircular(l *Lista_circularSimp) {
-	auxiliar := l.inicio
-	for i := 0; i < l.longitud; i++ {
-		fmt.Printf("Nombre del Cliente: %s, Id: %d \n", auxiliar.cliente.nombre, auxiliar.cliente.id)
+	auxiliar := l.Inicio
+	for i := 0; i < l.Longitud; i++ {
+		fmt.Printf("Nombre del Cliente: %s, Id: %d \n", auxiliar.Cliente.nombre, auxiliar.Cliente.Id)
 		println("------------------------")
-		auxiliar = auxiliar.siguiente
+		auxiliar = auxiliar.Siguiente
 	}
+}
+
+func (l *Lista_circularSimp) BuscarCliente(id int) {
+	aux := l.Inicio
+	for aux != nil {
+		if aux.Cliente.Id == id {
+			fmt.Println("Cliente encontrado")
+		}
+
+	}
+
 }
 
 func New_Lista_circularSimp() *Lista_circularSimp {
@@ -73,14 +84,14 @@ func (l *Lista_circularSimp) GraficoCircular() {
 	txt := "digraph ListaSimple{\n"
 	txt += "rankdir=LR;\n"
 	txt += "node[shape = oval];\n"
-	aux := l.inicio
+	aux := l.Inicio
 	count := 0
 
-	for i := 0; i < l.longitud; i++ {
-		txt = txt + "nodo" + strconv.Itoa(i) + "[label=\"" + aux.cliente.nombre + "\n" + "ID: " + strconv.Itoa(aux.cliente.id) + " \"];\n"
-		aux = aux.siguiente
+	for i := 0; i < l.Longitud; i++ {
+		txt = txt + "nodo" + strconv.Itoa(i) + "[label=\"" + aux.Cliente.nombre + "\n" + "ID: " + strconv.Itoa(aux.Cliente.Id) + " \"];\n"
+		aux = aux.Siguiente
 	}
-	for i := 0; i < l.longitud-1; i++ {
+	for i := 0; i < l.Longitud-1; i++ {
 		c := i + 1
 		txt += "nodo" + strconv.Itoa(i) + "->nodo" + strconv.Itoa(c) + ";\n"
 		count += 1
