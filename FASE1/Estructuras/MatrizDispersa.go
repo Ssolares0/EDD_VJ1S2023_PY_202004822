@@ -5,11 +5,11 @@ import (
 )
 
 type Matriz struct {
-	inicial      *NodoMatriz
-	pixel_width  int
-	pixel_height int
-	image_width  int
-	image_height int
+	Raiz         *NodoMatriz
+	Pixel_width  int
+	Pixel_height int
+	Image_width  int
+	Image_height int
 }
 type NodoMatriz struct {
 	Arriba    *NodoMatriz
@@ -29,5 +29,5 @@ func (l *Matriz) AgregarValues(image_width int, image_height int, pixel_width in
 }
 
 func NewMatriz() *Matriz {
-	return &Matriz{inicial: nil, pixel_width: 0, pixel_height: 0, image_width: 0, image_height: 0}
+	return &Matriz{Raiz: nil, Pixel_width: 0, Pixel_height: 0, Image_width: 0, Image_height: 0}
 }

@@ -37,7 +37,7 @@ func menu_login() {
 
 }
 func login() {
-
+	fmt.Println("Bienvenido al sistema de login!!")
 	fmt.Print("Ingresa tu usuario: ")
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
@@ -288,7 +288,7 @@ func verificarCola(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circu
 	aux := cActual.Inicio
 	aux2 := cli.Inicio
 	for aux != nil {
-		if aux.Cliente.Id != "X" {
+		if (aux.Cliente.Id != "X") || (aux.Cliente.Nombre != "x") {
 			for i := 0; i < cli.Longitud; i++ {
 				sv, _ := strconv.Atoi(aux.Cliente.Id)
 				if sv == aux2.Cliente.Id {
