@@ -1,10 +1,7 @@
 package Estructuras
 
 import (
-	"bufio"
-	"encoding/csv"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -53,7 +50,6 @@ func MostrarListaDoble(l *ListaDoble) {
 		println("------------------------")
 		auxiliar = auxiliar.siguiente
 	}
-	GenerarImagen()
 
 }
 
@@ -92,90 +88,6 @@ func (l *ListaDoble) GraficoDoble() {
 	createArch(name_archivo)
 	escribirEnArch(texto, name_archivo)
 	run(name_imagen, name_archivo)
-
-}
-func GenerarImagen() {
-	Layer := []int{}
-	File := []string{}
-	//Config := []string{}
-	//Value := []int{}
-	image_width := 0
-	image_height := 0
-	pixel_width := 0
-	pixel_height := 0
-
-	fmt.Println("Ingrese el nombre de la imagen que desea seleccionar")
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	seleccionada := scanner.Text()
-
-	ruta := "csv/" + seleccionada + "/inicial.csv"
-	fmt.Println("La ruta es:  " + ruta)
-
-	file, err := os.Open(ruta)
-	if err != nil {
-		fmt.Println(err)
-	}
-	records, err := csv.NewReader(file).ReadAll()
-	if err != nil {
-		return
-	}
-	for _, record := range records {
-		if (record[0] == "Layer") || (record[0] == "layer") {
-			continue
-		}
-
-		sv, _ := strconv.Atoi(record[0])
-		Layer = append(Layer, sv)
-		File = append(File, record[1])
-
-	}
-	fmt.Println("Layer:  ", Layer)
-	fmt.Println("File:  ", File)
-
-	for i := 0; i < len(Layer); i++ {
-		if Layer[i] == 0 {
-			config := File[i]
-			fmt.Println("La config es:  " + config)
-
-			rutaconfig := "csv/" + seleccionada + "/" + config
-			fmt.Println("La ruta de la configuracion es :  " + rutaconfig)
-
-			file2, err2 := os.Open(rutaconfig)
-			if err2 != nil {
-				fmt.Println(err2)
-			}
-			records2, err2 := csv.NewReader(file2).ReadAll()
-			if err2 != nil {
-				return
-			}
-			for _, record2 := range records2 {
-				if (record2[0] == "config") || (record2[0] == "Config") {
-					continue
-				}
-				if record2[0] == "image_width" {
-					image_width, _ = strconv.Atoi(record2[1])
-				}
-
-				if record2[0] == "image_height" {
-					image_height, _ = strconv.Atoi(record2[1])
-				}
-				if record2[0] == "pixel_width" {
-					pixel_width, _ = strconv.Atoi(record2[1])
-				}
-				if record2[0] == "pixel_height" {
-					pixel_height, _ = strconv.Atoi(record2[1])
-				}
-
-			}
-			//NewMatriz.AgregarValues(image_width, image_height, pixel_width, pixel_height)
-			fmt.Println(image_width, image_height, pixel_width, pixel_height)
-
-		} else {
-			fmt.Println("La capa es:  ", Layer[i], File[i])
-		}
-
-	}
 
 }
 

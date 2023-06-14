@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"encoding/csv"
 	"fmt"
+	"io"
 	"math/rand"
 	"os"
 	"strconv"
@@ -16,6 +17,7 @@ var ListaNuevaImagenes = Estructuras.New_ListaDoble()
 var ListaNuevaClientes = Estructuras.New_Lista_circularSimp()
 var ListaNuevaClientesPend = Estructuras.New_ListaCola()
 var ListaNuevaPila = Estructuras.New_Lista_pila()
+
 var ListaNuevaDispersa = Estructuras.NewMatriz()
 var ListaNuevaPedidos = Estructuras.New_Lista_pila()
 
@@ -31,6 +33,10 @@ func menu_login() {
 
 		if opc == 1 {
 			login()
+		}
+		if opc == 2 {
+			fmt.Println("Saliendo del sistema")
+			os.Exit(1)
 		}
 
 	}
@@ -228,6 +234,7 @@ func mostrarEmpleados() {
 func mostarImagenesCargadas() {
 	fmt.Println("*****************************************")
 	Estructuras.MostrarListaDoble(ListaNuevaImagenes)
+	GenerarImagen()
 
 }
 func mostrarClientesCargados() {
@@ -336,7 +343,127 @@ func menu_empleado() {
 		}
 	}
 }
+func GenerarImagen() {
+	//matriz := &Estructuras.Matriz{Raiz: &Estructuras.NodoMatriz{CoorX: -1, CoorY: -1, Color: "RAIZ"}}
 
+	Layer := []int{}
+	File := []string{}
+	//Config := []string{}
+	//Value := []int{}
+	image_width := 0
+	image_height := 0
+	pixel_width := 0
+	pixel_height := 0
+
+	fmt.Println("Ingrese el nombre de la imagen que desea seleccionar")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	seleccionada := scanner.Text()
+
+	ruta := "csv/" + seleccionada + "/inicial.csv"
+	fmt.Println("La ruta es:  " + ruta)
+
+	file, err := os.Open(ruta)
+	if err != nil {
+		fmt.Println(err)
+	}
+	records, err := csv.NewReader(file).ReadAll()
+	if err != nil {
+		return
+	}
+	for _, record := range records {
+		if (record[0] == "Layer") || (record[0] == "layer") {
+			continue
+		}
+
+		sv, _ := strconv.Atoi(record[0])
+		Layer = append(Layer, sv)
+		File = append(File, record[1])
+
+	}
+	fmt.Println("Layer:  ", Layer)
+	fmt.Println("File:  ", File)
+
+	for i := 0; i < len(Layer); i++ {
+		if Layer[i] == 0 {
+			config := File[i]
+			fmt.Println("La config es:  " + config)
+
+			rutaconfig := "csv/" + seleccionada + "/" + config
+			fmt.Println("La ruta de la configuracion es :  " + rutaconfig)
+
+			file2, err2 := os.Open(rutaconfig)
+			if err2 != nil {
+				fmt.Println(err2)
+			}
+			records2, err2 := csv.NewReader(file2).ReadAll()
+			if err2 != nil {
+				return
+			}
+			for _, record2 := range records2 {
+				if (record2[0] == "config") || (record2[0] == "Config") {
+					continue
+				}
+				if record2[0] == "image_width" {
+					image_width, _ = strconv.Atoi(record2[1])
+				}
+
+				if record2[0] == "image_height" {
+					image_height, _ = strconv.Atoi(record2[1])
+				}
+				if record2[0] == "pixel_width" {
+					pixel_width, _ = strconv.Atoi(record2[1])
+				}
+				if record2[0] == "pixel_height" {
+					pixel_height, _ = strconv.Atoi(record2[1])
+				}
+
+			}
+			//NewMatriz.AgregarValues(image_width, image_height, pixel_width, pixel_height)
+			fmt.Println(image_width, image_height, pixel_width, pixel_height)
+
+		} else if File[i] == "Cuerpo.csv" {
+
+			rutaCapa := "csv/" + seleccionada + "/" + File[i]
+
+			file, err := os.Open(rutaCapa)
+			if err != nil {
+				fmt.Println("No pude abrir el archivo")
+				return
+			}
+			defer file.Close()
+
+			lectura := csv.NewReader(file)
+			lectura.Comma = ','
+			x := 0
+			y := 0
+			for {
+				linea, err := lectura.Read()
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					fmt.Println("No pude leer la linea del csv")
+					continue
+				}
+				for i := 0; i < len(linea); i++ {
+					if linea[i] != "x" {
+						//ListaNuevaDispersa.AgregarElementos(x, y, linea[i])
+						//matriz.AgregarElementos(x, y, linea[i])
+						ListaNuevaDispersa.AgregarElementos(x, y, linea[i])
+
+					}
+					x++
+				}
+				x = 0
+				y++
+			}
+			ListaNuevaDispersa.ReporteGraphviz()
+		}
+
+	}
+
+}
 func main() {
 	menu_login()
 
