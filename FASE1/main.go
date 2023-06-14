@@ -363,6 +363,13 @@ func GenerarImagen() {
 	ruta := "csv/" + seleccionada + "/inicial.csv"
 	fmt.Println("La ruta es:  " + ruta)
 
+	fmt.Println("Ingrese la capa que desea empezando de la 1: ")
+	scanner2 := bufio.NewScanner(os.Stdin)
+	scanner2.Scan()
+	capaSeleccionada := scanner2.Text()
+
+	capaSeleccionadaInt, _ := strconv.Atoi(capaSeleccionada)
+
 	file, err := os.Open(ruta)
 	if err != nil {
 		fmt.Println(err)
@@ -381,8 +388,8 @@ func GenerarImagen() {
 		File = append(File, record[1])
 
 	}
-	fmt.Println("Layer:  ", Layer)
-	fmt.Println("File:  ", File)
+	/*fmt.Println("Layer:  ", Layer)
+	fmt.Println("File:  ", File)*/
 
 	for i := 0; i < len(Layer); i++ {
 		if Layer[i] == 0 {
@@ -390,7 +397,6 @@ func GenerarImagen() {
 			fmt.Println("La config es:  " + config)
 
 			rutaconfig := "csv/" + seleccionada + "/" + config
-			fmt.Println("La ruta de la configuracion es :  " + rutaconfig)
 
 			file2, err2 := os.Open(rutaconfig)
 			if err2 != nil {
@@ -422,7 +428,8 @@ func GenerarImagen() {
 			//NewMatriz.AgregarValues(image_width, image_height, pixel_width, pixel_height)
 			fmt.Println(image_width, image_height, pixel_width, pixel_height)
 
-		} else if File[i] == "Cuerpo.csv" {
+		} else if Layer[i] == capaSeleccionadaInt {
+			fmt.Println("Si entrooo")
 
 			rutaCapa := "csv/" + seleccionada + "/" + File[i]
 
@@ -458,10 +465,11 @@ func GenerarImagen() {
 				x = 0
 				y++
 			}
-			ListaNuevaDispersa.ReporteGraphviz()
+
 		}
 
 	}
+	ListaNuevaDispersa.ReporteGraphviz(seleccionada, capaSeleccionada)
 
 }
 func main() {

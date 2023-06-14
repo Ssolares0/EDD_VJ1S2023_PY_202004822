@@ -182,10 +182,13 @@ func (l *Matriz) AgregarElementos(x int, y int, color string) {
 	}
 
 }
-func (l *Matriz) ReporteGraphviz() {
+func (l *Matriz) ReporteGraphviz(nombreCapa string, numeroCapa string) {
+
 	texto := ""
-	name_archivo := "Reportes/matrizDispersa.dot"
-	name_imagen := "Reportes/matrizDispersa.jpg"
+	//name_archivo := "Resultados/madis.dot"
+	//name_imagen := "Resultados/madis.jpg"
+	name_archivo := "Resultados/" + nombreCapa + "/capa" + numeroCapa + ".dot"
+	name_imagen := "Resultados/" + nombreCapa + "/capa" + numeroCapa + ".jpg"
 	aux1 := l.Raiz
 	aux2 := l.Raiz
 	aux3 := l.Raiz
@@ -234,6 +237,7 @@ func (l *Matriz) ReporteGraphviz() {
 	createArch(name_archivo)
 	escribirEnArch(texto, name_archivo)
 	run(name_imagen, name_archivo)
+
 }
 func NewMatriz() *Matriz {
 	return &Matriz{Raiz: &NodoMatriz{CoorX: -1, CoorY: -1, Color: "Raiz"}}
