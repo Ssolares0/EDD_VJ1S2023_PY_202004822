@@ -1,5 +1,0 @@
-digraph ListaSimple{
-rankdir=LR;
-node[shape = oval];
-nodo0->nodo0;
-}

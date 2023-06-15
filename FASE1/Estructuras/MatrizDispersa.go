@@ -3,16 +3,17 @@ package Estructuras
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type Matriz struct {
 	Raiz *NodoMatriz
-	/*
-		Pixel_width  int
-		Pixel_height int
-		Image_width  int
-		Image_height int
-	*/
+
+	Pixel_width  int
+	Pixel_height int
+	Image_width  int
+	Image_height int
+	Name_imagen  string
 }
 type NodoMatriz struct {
 	Arriba    *NodoMatriz
@@ -139,6 +140,91 @@ func (l *Matriz) newFila(y int) *NodoMatriz {
 	fila := l.InsertarFila(newNodo, l.Raiz)
 	return fila
 }
+func (l *Matriz) MandarData(image_width int, image_height int, pixel_width int, pixel_height int, nameImagen string) {
+	l.Image_width = image_width
+	l.Image_height = image_height
+	l.Pixel_width = pixel_width
+	l.Pixel_height = pixel_height
+	l.Name_imagen = nameImagen
+}
+func (l *Matriz) Css() {
+
+	archivocss := "Resultados/" + l.Name_imagen + ".css" // csv/mario/mario.css
+	contenidocss := "body{\n background: #333333; \n height: 100vh; \n display: flex; \n justify-content: center; \n align-items: center; \n } \n"
+	contenidocss += ".canvas{ \n width: " + strconv.Itoa(l.Image_width*l.Pixel_width) + "px; \n"
+	contenidocss += "height: " + strconv.Itoa(l.Image_height*l.Pixel_height) + "px; \n }"
+	contenidocss += ".pixel{ \n width: " + strconv.Itoa(l.Pixel_width) + "px; \n"
+	contenidocss += "height: " + strconv.Itoa(l.Pixel_height) + "px; \n float: left; \n } \n"
+	xPixel := 0
+
+	x := 1
+
+	auxiliarFila := l.Raiz.Abajo
+	auxiliarColumna := auxiliarFila.Siguiente
+	for i := 0; i < l.Image_height; i++ {
+		for j := 0; j < l.Image_width; j++ {
+			if auxiliarColumna != nil {
+				if auxiliarColumna.CoorX == xPixel {
+					contenidocss += ".pixel:nth-child(" + strconv.Itoa(x) + ") { background: rgb(" + strings.ReplaceAll(auxiliarColumna.Color, "-", ",") + "); }\n"
+					auxiliarColumna = auxiliarColumna.Siguiente
+				}
+				xPixel++
+			}
+			x++
+		}
+		xPixel = 0
+		auxiliarFila = auxiliarFila.Abajo
+		if auxiliarFila != nil {
+			auxiliarColumna = auxiliarFila.Siguiente
+		}
+	}
+	l.generarHTML(l.Name_imagen)
+	createArch(archivocss)
+	escribirEnArch(contenidocss, archivocss)
+	/*
+		for j := 0; j < l.Image_height; j++ {
+			for auxiliarFila != nil {
+				for i := 0; i < l.Image_width; i++ {
+					for auxiliarColumna != nil {
+						if auxiliarColumna.CoorX == xPixel {
+							contenidocss += ".pixel:nth-child(" + strconv.Itoa(x) + ") { background: rgb(" + strings.ReplaceAll(auxiliarColumna.Color, "-", ",") + "); }\n"
+							auxiliarColumna = auxiliarColumna.Siguiente
+							x++
+						}
+						xPixel++
+						x++
+					}
+					x++
+
+				}
+				xPixel = 0
+				x++
+				auxiliarFila = auxiliarFila.Abajo
+				if auxiliarFila != nil {
+					auxiliarColumna = auxiliarFila.Siguiente
+
+				}
+			}
+
+		}
+	*/
+
+}
+
+func (l *Matriz) generarHTML(nombreImagen string) {
+	archHTML := "Resultados/" + l.Name_imagen + ".html"
+	contenidoHTML := "<!DOCTYPE html> \n <html> \n <head> \n <link rel=\"stylesheet\"  href=\""
+	contenidoHTML += l.Name_imagen + ".css"
+	contenidoHTML += "\" > \n </head> \n <body> \n <div class=\"canvas\"> \n"
+	for i := 0; i < l.Image_height; i++ {
+		for j := 0; j < l.Image_width; j++ {
+			contenidoHTML += "    <div class=\"pixel\"></div> \n"
+		}
+	}
+	contenidoHTML += "</div> \n </body> \n </html> \n"
+	createArch(archHTML)
+	escribirEnArch(contenidoHTML, archHTML)
+}
 
 func (l *Matriz) AgregarElementos(x int, y int, color string) {
 	newNodo := &NodoMatriz{CoorX: x, CoorY: y, Color: color}
@@ -185,10 +271,10 @@ func (l *Matriz) AgregarElementos(x int, y int, color string) {
 func (l *Matriz) ReporteGraphviz(nombreCapa string, numeroCapa string) {
 
 	texto := ""
-	//name_archivo := "Resultados/madis.dot"
-	//name_imagen := "Resultados/madis.jpg"
-	name_archivo := "Resultados/" + nombreCapa + "/capa" + numeroCapa + ".dot"
-	name_imagen := "Resultados/" + nombreCapa + "/capa" + numeroCapa + ".jpg"
+	name_archivo := "Resultados/" + "ReporteCapa/" + nombreCapa + numeroCapa + ".dot"
+	name_imagen := "Resultados/" + "ReporteCapa/" + nombreCapa + numeroCapa + ".jpg"
+	//name_archivo := "Resultados/" + nombreCapa + "/capa" + numeroCapa + ".dot"
+	//name_imagen := "Resultados/" + nombreCapa + "/capa" + numeroCapa + ".jpg"
 	aux1 := l.Raiz
 	aux2 := l.Raiz
 	aux3 := l.Raiz

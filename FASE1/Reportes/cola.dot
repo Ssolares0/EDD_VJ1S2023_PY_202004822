@@ -1,6 +1,0 @@
-digraph cola{
-rankdir=LR;
-node[shape = record];
-nodonull2[label="null"];
-nodo0->nodonull2;
-}

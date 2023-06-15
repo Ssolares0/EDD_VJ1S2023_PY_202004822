@@ -124,6 +124,7 @@ func cargar_Empleados() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	records, err := csv.NewReader(file).ReadAll()
 	if err != nil {
 		return
@@ -319,12 +320,13 @@ func verificarCola(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circu
 
 func menu_empleado() {
 	var opc int = 0
-	for opc != 4 {
+	for opc != 5 {
 		fmt.Println("******MENU EMPLEADO******")
 		fmt.Println("1. Ver imagenes Cargadas")
 		fmt.Println("2. Realizar Pedido")
-		fmt.Println("3. Salir del apartado de empleado")
-		fmt.Println("4. Salir del sistema")
+		fmt.Println("3. IMAGEN FINAL")
+		fmt.Println("4. Salir del apartado de empleado")
+		fmt.Println("5. Salir del sistema")
 		fmt.Println("Ingrese una opción: ")
 		fmt.Scanln(&opc)
 
@@ -338,9 +340,12 @@ func menu_empleado() {
 			realizarPedido(ListaNuevaClientesPend, ListaNuevaClientes)
 
 		case 3:
-			menu_login()
+			ListaNuevaDispersa.Css()
 
+		case 4:
+			menu_login()
 		}
+
 	}
 }
 func GenerarImagen() {
@@ -425,8 +430,8 @@ func GenerarImagen() {
 				}
 
 			}
-			//NewMatriz.AgregarValues(image_width, image_height, pixel_width, pixel_height)
-			fmt.Println(image_width, image_height, pixel_width, pixel_height)
+			ListaNuevaDispersa.MandarData(image_width, image_height, pixel_width, pixel_height, seleccionada)
+			fmt.Println("image_width:  ", image_width, "image_height:  ", image_height, "pixel_width:  ", pixel_width, "pixel_height:  ", pixel_height)
 
 		} else if Layer[i] == capaSeleccionadaInt {
 			fmt.Println("Si entrooo")
@@ -471,6 +476,9 @@ func GenerarImagen() {
 	}
 	ListaNuevaDispersa.ReporteGraphviz(seleccionada, capaSeleccionada)
 
+}
+func GenerarImagen2() {
+	ListaNuevaDispersa.Css()
 }
 func main() {
 	menu_login()
