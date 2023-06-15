@@ -1,33 +1,33 @@
 package Estructuras
 
 type Cliente_PIla struct {
-	idpila     string
-	nombrepila string
+	Idpila     string
+	Nombrepila string
 }
 
 type NodoPila struct {
-	clientePila *Cliente_PIla
-	siguiente   *NodoPila
+	ClientePila *Cliente_PIla
+	Siguiente   *NodoPila
 }
 
 type Lista_pila struct {
-	inicio   *NodoPila
-	longitud int
+	Inicio   *NodoPila
+	Longitud int
 }
 
 func (l *Lista_pila) EstaVacia() bool {
-	return l.longitud == 0
+	return l.Longitud == 0
 }
 
 func (l *Lista_pila) Push(id string, nombre string) {
-	if l.longitud == 0 {
+	if l.Longitud == 0 {
 		newNodo := &NodoPila{&Cliente_PIla{id, nombre}, nil}
-		l.inicio = newNodo
-		l.longitud++
+		l.Inicio = newNodo
+		l.Longitud++
 	} else {
-		newNodo := &NodoPila{&Cliente_PIla{id, nombre}, l.inicio}
-		l.inicio = newNodo
-		l.longitud++
+		newNodo := &NodoPila{&Cliente_PIla{id, nombre}, l.Inicio}
+		l.Inicio = newNodo
+		l.Longitud++
 	}
 }
 
@@ -37,12 +37,12 @@ func (l *Lista_pila) GraficarPila() {
 	txt := "digraph pila{\n"
 	txt += "rankdir=LR;\n"
 	txt += "node[shape = record]"
-	aux := l.inicio
+	aux := l.Inicio
 	txt += "nodo0 [label=\""
 
-	for i := 0; i < l.longitud; i++ {
-		txt = txt + "|(ID: " + aux.clientePila.idpila + ", Imagen: " + aux.clientePila.nombrepila + ")"
-		aux = aux.siguiente
+	for i := 0; i < l.Longitud; i++ {
+		txt = txt + "|(ID: " + aux.ClientePila.Idpila + ", Imagen: " + aux.ClientePila.Nombrepila + ")"
+		aux = aux.Siguiente
 	}
 	txt += "\"]; \n}"
 	createArch(name_archivo)

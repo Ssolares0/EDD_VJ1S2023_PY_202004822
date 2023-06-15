@@ -104,6 +104,7 @@ func menu_administrador() {
 			ListaNuevaClientes.GraficoCircular()
 			ListaNuevaClientesPend.GraficarCola()
 			ListaNuevaPila.GraficarPila()
+			crearJSON(ListaNuevaPila)
 
 		case 6:
 			menu_login()
@@ -316,6 +317,59 @@ func verificarCola(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circu
 	}
 
 	return false
+}
+
+func crearJSON(l *Estructuras.Lista_pila) {
+	fmt.Println("Creando JSON")
+
+	//Escribir en el archivo
+	archivoJSON := "Reportes/" + "reporteJSON" + ".json"
+	contenidoJSON := ("{\n" + "\"Pedidos\":[\n")
+	for i := 0; i < l.Longitud; i++ {
+		contenidoJSON += ("{\n" + "\"IdCliente\":\"" + l.Inicio.ClientePila.Idpila + "\",\n")
+		contenidoJSON += ("\"NombreCliente\":\"" + l.Inicio.ClientePila.Nombrepila + "\" \n")
+		contenidoJSON += ("},\n")
+		l.Inicio = l.Inicio.Siguiente
+	}
+	contenidoJSON += "] \n"
+	contenidoJSON += "}"
+
+	var _, err = os.Stat(archivoJSON)
+
+	if os.IsNotExist(err) {
+		var file, err = os.Create(archivoJSON)
+		if err != nil {
+			return
+		}
+		defer file.Close()
+	} else {
+		var filee, err = os.Create(archivoJSON)
+		filee.WriteString("")
+		if err != nil {
+			return
+		}
+		defer filee.Close()
+
+	}
+
+	var file2, err2 = os.OpenFile(archivoJSON, os.O_RDWR, 0644)
+	if err2 != nil {
+		return
+	}
+	defer file2.Close()
+	// Escribimos texto linea por linea
+	_, err2 = file2.WriteString(contenidoJSON)
+	if err2 != nil {
+		return
+	}
+	// Guarda cambios del archivo
+	err2 = file2.Sync()
+	if err2 != nil {
+		return
+	}
+	fmt.Println("Archivo modificado existosamente.")
+	//Guardar cambios
+
 }
 
 func menu_empleado() {
