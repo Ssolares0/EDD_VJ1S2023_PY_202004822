@@ -229,7 +229,7 @@ func actualizar_Cola() {
 
 func mostrarEmpleados() {
 	fmt.Println("*****************************************")
-	fmt.Println("pruebaa")
+
 	Estructuras.MostrarLista(ListaNuevaEmpleados)
 
 }
@@ -257,6 +257,7 @@ func realizarPedido(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circ
 
 	existente := verificarCola(ListaNuevaClientesPend, ListaNuevaClientes)
 	if existente && cActual.Inicio != nil {
+
 		fmt.Println("El usuario actual es: ", cActual.Inicio.Cliente.Nombre)
 		Estructuras.MostrarNormal(ListaNuevaImagenes)
 		fmt.Println("Eliga una pelicula: ")
@@ -275,8 +276,9 @@ func realizarPedido(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circ
 		numeroAleatorio := rand.Intn(9000) + 1000
 
 		fmt.Println(numeroAleatorio)
-		fmt.Println("El usuario actual es: ", cActual.Inicio.Cliente.Nombre)
+
 		ListaNuevaClientes.AgregarCliente(numeroAleatorio, cActual.Inicio.Cliente.Nombre)
+
 		Estructuras.MostrarListaDoble(ListaNuevaImagenes)
 
 		fmt.Println("Eliga una pelicula: ")

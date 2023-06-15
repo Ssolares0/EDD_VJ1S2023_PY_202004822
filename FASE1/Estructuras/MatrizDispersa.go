@@ -173,7 +173,10 @@ func (l *Matriz) Css() {
 			x++
 		}
 		xPixel = 0
-		auxiliarFila = auxiliarFila.Abajo
+		if auxiliarFila.Abajo != nil {
+			auxiliarFila = auxiliarFila.Abajo
+		}
+
 		if auxiliarFila != nil {
 			auxiliarColumna = auxiliarFila.Siguiente
 		}
@@ -181,33 +184,6 @@ func (l *Matriz) Css() {
 	l.generarHTML(l.Name_imagen)
 	createArch(archivocss)
 	escribirEnArch(contenidocss, archivocss)
-	/*
-		for j := 0; j < l.Image_height; j++ {
-			for auxiliarFila != nil {
-				for i := 0; i < l.Image_width; i++ {
-					for auxiliarColumna != nil {
-						if auxiliarColumna.CoorX == xPixel {
-							contenidocss += ".pixel:nth-child(" + strconv.Itoa(x) + ") { background: rgb(" + strings.ReplaceAll(auxiliarColumna.Color, "-", ",") + "); }\n"
-							auxiliarColumna = auxiliarColumna.Siguiente
-							x++
-						}
-						xPixel++
-						x++
-					}
-					x++
-
-				}
-				xPixel = 0
-				x++
-				auxiliarFila = auxiliarFila.Abajo
-				if auxiliarFila != nil {
-					auxiliarColumna = auxiliarFila.Siguiente
-
-				}
-			}
-
-		}
-	*/
 
 }
 
