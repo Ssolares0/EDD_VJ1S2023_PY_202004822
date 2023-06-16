@@ -6,59 +6,61 @@ import (
 )
 
 type Imagen struct {
-	nombre string
+	Nombre string
 	capas  int
 }
 
 type NodoDoble struct {
-	imagen    *Imagen
-	siguiente *NodoDoble
+	Imagen    *Imagen
+	Siguiente *NodoDoble
 	anterior  *NodoDoble
 }
 
 type ListaDoble struct {
-	inicio   *NodoDoble
-	longitud int
+	Inicio   *NodoDoble
+	Longitud int
 }
 
 func (l *ListaDoble) validar_vacia() bool {
-	return l.longitud == 0
+	return l.Longitud == 0
 }
 
 func (l *ListaDoble) AgregarImagen(nombre string, capas int) {
 	nuevoImagen := &Imagen{nombre, capas}
 
 	if l.validar_vacia() {
-		l.inicio = &NodoDoble{nuevoImagen, nil, nil}
-		l.longitud++
+		l.Inicio = &NodoDoble{nuevoImagen, nil, nil}
+		l.Longitud++
 
 	} else {
-		aux := l.inicio
-		for aux.siguiente != nil {
-			aux = aux.siguiente
+		aux := l.Inicio
+		for aux.Siguiente != nil {
+			aux = aux.Siguiente
 		}
-		aux.siguiente = &NodoDoble{nuevoImagen, nil, aux}
-		l.longitud++
+		aux.Siguiente = &NodoDoble{nuevoImagen, nil, aux}
+		l.Longitud++
 
 	}
 }
 
 func MostrarListaDoble(l *ListaDoble) {
-	auxiliar := l.inicio
+	count := 1
+	auxiliar := l.Inicio
 	for auxiliar != nil {
-		fmt.Printf("Nombre de la imagen: %s, Capa: %d \n", auxiliar.imagen.nombre, auxiliar.imagen.capas)
+		fmt.Printf("Numero: %d, Nombre de la imagen: %s, Capa: %d \n", count, auxiliar.Imagen.Nombre, auxiliar.Imagen.capas)
 		println("------------------------")
-		auxiliar = auxiliar.siguiente
+		auxiliar = auxiliar.Siguiente
+		count++
 	}
 
 }
 
 func MostrarNormal(l *ListaDoble) {
-	auxiliar := l.inicio
+	auxiliar := l.Inicio
 	for auxiliar != nil {
-		fmt.Printf("Nombre de la imagen: %s, Capa: %d \n", auxiliar.imagen.nombre, auxiliar.imagen.capas)
+		fmt.Printf("Nombre de la imagen: %s, Capa: %d \n", auxiliar.Imagen.Nombre, auxiliar.Imagen.capas)
 		println("------------------------")
-		auxiliar = auxiliar.siguiente
+		auxiliar = auxiliar.Siguiente
 	}
 }
 
@@ -70,14 +72,14 @@ func (l *ListaDoble) GraficoDoble() {
 	texto += "node[shape = record];\n"
 	texto += "nodonull1[label=\"null\"];\n"
 	texto += "nodonull2[label=\"null\"];\n"
-	aux := l.inicio
+	aux := l.Inicio
 	contador := 0
 	texto += "nodonull1->nodo0 [dir=back];\n"
-	for i := 0; i < l.longitud; i++ {
-		texto += "nodo" + strconv.Itoa(i) + "[label=\"" + aux.imagen.nombre + "\"];\n"
-		aux = aux.siguiente
+	for i := 0; i < l.Longitud; i++ {
+		texto += "nodo" + strconv.Itoa(i) + "[label=\"" + aux.Imagen.Nombre + "\"];\n"
+		aux = aux.Siguiente
 	}
-	for i := 0; i < l.longitud-1; i++ {
+	for i := 0; i < l.Longitud-1; i++ {
 		c := i + 1
 		texto += "nodo" + strconv.Itoa(i) + "->nodo" + strconv.Itoa(c) + ";\n"
 		texto += "nodo" + strconv.Itoa(c) + "->nodo" + strconv.Itoa(i) + ";\n"

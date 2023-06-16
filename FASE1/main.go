@@ -251,34 +251,19 @@ func mostrarClientesencola() {
 
 }
 
-func realizarPedido(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circularSimp) {
+func realizarPedido(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circularSimp, cimagen *Estructuras.ListaDoble) {
 	fmt.Println("*****************************************")
 	fmt.Println("Realizar Pedido")
+	// Inicializar el generador de números aleatorios con una semilla única
+	rand.Seed(time.Now().UnixNano())
+
+	// Generar un número aleatorio de 4 dígitos
+	numeroAleatorio := rand.Intn(9000) + 1000
 
 	existente := verificarCola(ListaNuevaClientesPend, ListaNuevaClientes)
 	if existente && cActual.Inicio != nil {
 
 		fmt.Println("El usuario actual es: ", cActual.Inicio.Cliente.Nombre)
-		Estructuras.MostrarNormal(ListaNuevaImagenes)
-		fmt.Println("Eliga una pelicula: ")
-		scanner := bufio.NewScanner(os.Stdin)
-		scanner.Scan()
-		nombrepelicula := scanner.Text()
-		ListaNuevaPila.Push(cActual.Inicio.Cliente.Id, nombrepelicula)
-
-		cActual.Descolar()
-
-	} else if !existente && cActual.Inicio != nil {
-		// Inicializar el generador de números aleatorios con una semilla única
-		rand.Seed(time.Now().UnixNano())
-
-		// Generar un número aleatorio de 4 dígitos
-		numeroAleatorio := rand.Intn(9000) + 1000
-
-		fmt.Println(numeroAleatorio)
-
-		ListaNuevaClientes.AgregarCliente(numeroAleatorio, cActual.Inicio.Cliente.Nombre)
-
 		Estructuras.MostrarListaDoble(ListaNuevaImagenes)
 
 		fmt.Println("Eliga una pelicula: ")
@@ -288,8 +273,24 @@ func realizarPedido(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circ
 		ListaNuevaPila.Push(cActual.Inicio.Cliente.Id, nombrepelicula)
 		cActual.Descolar()
 
-	} else if cActual.Inicio == nil {
-		fmt.Println("La cola esta vacia")
+	} else if !existente && cActual.Inicio != nil {
+		fmt.Println("El usuario actual es: ", cActual.Inicio.Cliente.Nombre)
+
+		//Agregamos el cliente nuevo a la lista circular
+		ListaNuevaClientes.AgregarCliente(numeroAleatorio, cActual.Inicio.Cliente.Nombre)
+
+		//mostramos las imagenes disponibles
+		Estructuras.MostrarListaDoble(ListaNuevaImagenes)
+
+		fmt.Println("Eliga una pelicula: ")
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		nombrepelicula := scanner.Text()
+
+		numeroAleatorioString := strconv.Itoa(numeroAleatorio)
+		ListaNuevaPila.Push(numeroAleatorioString, nombrepelicula)
+		cActual.Descolar()
+
 	}
 
 }
@@ -298,8 +299,10 @@ func verificarCola(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circu
 	fmt.Println("verificando cola")
 	aux := cActual.Inicio
 	aux2 := cli.Inicio
-	for aux != nil {
-		if (aux.Cliente.Id != "X") || (aux.Cliente.Nombre != "x") {
+	if aux != nil {
+
+		if aux.Cliente.Id != "x" {
+
 			for i := 0; i < cli.Longitud; i++ {
 				sv, _ := strconv.Atoi(aux.Cliente.Id)
 				if sv == aux2.Cliente.Id {
@@ -307,15 +310,16 @@ func verificarCola(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circu
 
 					return true
 				}
-				aux2 = aux2.Siguiente
+
 			}
+			//aux2 = aux2.Siguiente
 
 		} else {
-			fmt.Println("Cliente Nuevo")
+
 			return false
 
 		}
-		aux = aux.Siguiente
+		//aux = aux.Siguiente
 	}
 
 	return false
@@ -333,6 +337,8 @@ func crearJSON(l *Estructuras.Lista_pila) {
 		contenidoJSON += ("},\n")
 		l.Inicio = l.Inicio.Siguiente
 	}
+	contenidoJSON += "{ \n"
+	contenidoJSON += "} \n"
 	contenidoJSON += "] \n"
 	contenidoJSON += "}"
 
@@ -393,7 +399,7 @@ func menu_empleado() {
 
 		case 2:
 			fmt.Println("Realizar Pedido")
-			realizarPedido(ListaNuevaClientesPend, ListaNuevaClientes)
+			realizarPedido(ListaNuevaClientesPend, ListaNuevaClientes, ListaNuevaImagenes)
 
 		case 3:
 			ListaNuevaDispersa.Css()
