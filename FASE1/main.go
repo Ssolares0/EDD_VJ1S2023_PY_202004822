@@ -339,7 +339,7 @@ func verificarCola(cActual *Estructuras.Lista_cola, cli *Estructuras.Lista_circu
 	aux2 := cli.Inicio
 	if aux != nil {
 
-		if aux.Cliente.Id != "x" {
+		if (aux.Cliente.Id != "x") || (aux.Cliente.Id != "X") {
 
 			for i := 0; i < cli.Longitud; i++ {
 				sv, _ := strconv.Atoi(aux.Cliente.Id)
