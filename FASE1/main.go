@@ -1,7 +1,7 @@
 package main
 
 import (
-	"EDD_VJ1S2023_PY_202004822/Estructuras"
+	"Fase1/Estructuras"
 	"bufio"
 	"encoding/csv"
 	"fmt"

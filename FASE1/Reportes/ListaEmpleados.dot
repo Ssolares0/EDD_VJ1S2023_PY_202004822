@@ -1,0 +1,23 @@
+digraph ListaSimple{
+rankdir=LR;
+node[shape = oval];
+nodonull2[label="null"];
+nodo0[label="Cristian Suy
+ID: 3475 "];
+nodo1[label="Hector Jimenez
+ID: 4564 "];
+nodo2[label="Pablo Velasquez
+ID: 1452 "];
+nodo3[label="Jaquelin Gomez
+ID: 1957 "];
+nodo4[label="Yadira Ruiz
+ID: 3340 "];
+nodo5[label="Paula Fuentes
+ID: 2576 "];
+nodo0->nodo1;
+nodo1->nodo2;
+nodo2->nodo3;
+nodo3->nodo4;
+nodo4->nodo5;
+nodo5->nodonull2;
+}

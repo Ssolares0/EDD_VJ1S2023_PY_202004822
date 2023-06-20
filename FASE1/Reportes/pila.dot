@@ -1,0 +1,4 @@
+digraph pila{
+rankdir=LR;
+node[shape = record]nodo0 [label=""]; 
+}
