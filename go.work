@@ -1,0 +1,6 @@
+go 1.20
+
+use (
+./Fase1
+./Fase2/BACKEND
+)
