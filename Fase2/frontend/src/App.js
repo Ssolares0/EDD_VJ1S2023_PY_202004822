@@ -1,8 +1,11 @@
 import logo from './logo.svg';
-import './App.css';
+import './css/Style.css';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { Login } from './components/Login';
+import { Admin } from './components/Admin';
 
 function App() {
-  return (
+  /*return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -19,6 +22,15 @@ function App() {
         </a>
       </header>
     </div>
+  );*/
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/Admin" element={<Admin />}></Route>
+      </Routes>  
+    </Router>
+
   );
 }
 
