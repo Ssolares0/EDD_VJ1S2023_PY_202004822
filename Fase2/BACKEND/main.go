@@ -17,7 +17,7 @@ import (
 )
 
 var tree *Estructuras2.Arbol
-var ListaNuevaEmpleados = Estructuras2.New_Lista()
+var simple *Estructuras2.Lista
 
 type ResponseImage struct {
 	Base64 string
@@ -40,6 +40,8 @@ var RutasNew Rutas
 
 func main() {
 	tree = &Estructuras2.Arbol{Raiz: nil}
+	simple = &Estructuras2.Lista{Inicio: nil}
+
 	r := mux.NewRouter()
 
 	//Mostramos el arbol
@@ -64,6 +66,9 @@ func main() {
 
 	//Obtener datos del login
 	r.HandleFunc("/ObtenerDatosLogin", ObtenerDatosLogin).Methods("GET")
+
+	//Obtener datos empleados
+	r.HandleFunc("/Empleados", MostrarEmpleados).Methods("GET")
 
 	//menu adminisrador
 	//r.HandleFunc("/MenuAdmin", MenuAdmin).Methods("GET")
@@ -136,10 +141,18 @@ func CargaMasiva(w http.ResponseWriter, req *http.Request) {
 			continue
 		}
 		sv, _ := strconv.Atoi(record[0])
-		ListaNuevaEmpleados.AgregarEmpleado(record[1], sv, record[2], record[3])
+		simple.AgregarEmpleado(record[1], sv, record[2], record[2])
+		json.NewEncoder(w).Encode(&simple)
 
 	}
 
+}
+
+// mostrar Empleados cargados
+func MostrarEmpleados(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(simple)
 }
 
 func MostrarRutas(w http.ResponseWriter, req *http.Request) {

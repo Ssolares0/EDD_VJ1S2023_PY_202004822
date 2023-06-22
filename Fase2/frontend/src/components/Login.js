@@ -21,7 +21,7 @@ export const Login = () => {
           .then(data => {
             // Aquí puedes trabajar con la respuesta JSON recibida
             if (data.Admin ===true){
-                window.open('http://localhost:3000/Admin', '_blank');
+                window.open('http://localhost:3000/Admin','_self');
             } else if (data.Admin ===false){
                 window.alert('Pare');
             }
@@ -36,35 +36,34 @@ export const Login = () => {
     
 
     return (
+        
         <div className="container">
+            
         <div className="screen">
+            
             <div className="screen__content">
                 
                 
                 <form onSubmit={handleSubmit} className="login">
+                <h3 className='letra'>Log In</h3>
+
+                    
                     
                     <div className="login__field">
                         
                         <i className="login__icon fas fa-user"></i>
-                        <input type="text" className="login__input" placeholder="User name / Email" required onChange={e => setUsername(e.target.value)} value={Username}/>
+                        <input type="text" className="login__input" placeholder="User name / Email" required onChange={e => setUsername(e.target.value)}/>
                     </div>
                     <div className="login__field">
                         <i className="login__icon fas fa-lock"></i>
-                        <input type="password" className="login__input" placeholder="Password" required onChange={e =>setPassword(e.target.value)} value={Password}  />
+                        <input type="password" className="login__input" placeholder="Password" required onChange={e =>setPassword(e.target.value)} />
                     </div>
                     <button className="button login__submit"  value="Iniciar sesión"type ="submit"id="submit" >
                         <span className="button__text">Log In Now</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>				
                 </form>
-                <div className="social-login">
-                    <h3>log in via</h3>
-                    <div className="social-icons">
-                        <a href="#" className="social-login__icon fab fa-instagram"></a>
-                        <a href="#" className="social-login__icon fab fa-facebook"></a>
-                        <a href="#" className="social-login__icon fab fa-twitter"></a>
-                    </div>
-                </div>
+               
             </div>
             <div className="screen__background">
                 <span className="screen__background__shape screen__background__shape4"></span>

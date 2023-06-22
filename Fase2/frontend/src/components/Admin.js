@@ -33,7 +33,7 @@ export const Admin = () => {
     };
 
     const cerrarSesion = async(e) => {
-        window.open('http://localhost:3000/', '_blank');
+        window.open('http://localhost:3000/', '_self');
     }
 
    
@@ -44,9 +44,11 @@ export const Admin = () => {
         <div className="container">
         <div className="screen">
             <div className="screen__content">
+            
                 
                 
                 <form onSubmit={handleSubmit} className="login">
+                <h3 className='letra'>Menu Admin</h3>
                     
                     <div className="login__field">
                         

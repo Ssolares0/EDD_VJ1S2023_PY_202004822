@@ -83,6 +83,16 @@ body {
 	right: 50px;	
 	border-radius: 60px;
 }
+.letra{
+	clear: both;
+	text-align: center;
+	color: #666;
+	font-size: 160%;
+	margin: 5px 0 5px 0;
+}   
+.colores{
+	clear: both; 
+}    
 
 .login {
 	width: 320px;

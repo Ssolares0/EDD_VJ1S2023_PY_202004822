@@ -9,7 +9,7 @@ import (
 Lista Simple enlazada para los empleados
 */
 type Empleado struct {
-	nombre   string
+	Nombre   string
 	Id       int
 	cargo    string
 	Password string
@@ -26,8 +26,8 @@ consta de 2 atributos, inicio que se refiere al primer elemento de la lista de t
 y longitud de tipo entero que se refiere al tamaño de la lista actual
 */
 type Lista struct {
-	inicio   *Nodo
-	longitud int
+	Inicio   *Nodo
+	Longitud int
 }
 
 func NewNodo(empleado *Empleado) *Nodo {
@@ -40,7 +40,7 @@ para saber si la lista esta vacia o tiene elementos
 */
 
 func (l *Lista) EstaVacia() bool {
-	if l.longitud == 0 {
+	if l.Longitud == 0 {
 		return true
 	} else {
 		return false
@@ -51,25 +51,25 @@ func (l *Lista) AgregarEmpleado(nombre string, id int, cargo string, password st
 	comprobacion := l.EstaVacia()
 	if comprobacion {
 		nuevoEmpleado := &Empleado{nombre, id, cargo, password}
-		l.inicio = NewNodo(nuevoEmpleado)
-		l.longitud++
+		l.Inicio = NewNodo(nuevoEmpleado)
+		l.Longitud++
 	} else {
-		aux := l.inicio
+		aux := l.Inicio
 		for aux.siguiente != nil {
 			aux = aux.siguiente
 		}
 		nuevoEmpleado := &Empleado{nombre, id, cargo, password}
 		aux.siguiente = NewNodo(nuevoEmpleado)
 		aux.siguiente.siguiente = nil
-		l.longitud++
+		l.Longitud++
 	}
 }
 
 /**Creamos la funcion MostrarLista para imprimir los valores de la lista*/
 func MostrarLista(lista *Lista) {
-	auxiliar := lista.inicio
+	auxiliar := lista.Inicio
 	for auxiliar != nil {
-		fmt.Println(auxiliar.empleado.nombre)
+		fmt.Println(auxiliar.empleado.Nombre)
 		fmt.Println(auxiliar.empleado.Id)
 		fmt.Println(auxiliar.empleado.cargo)
 		fmt.Println(auxiliar.empleado.Password)
@@ -81,7 +81,7 @@ func MostrarLista(lista *Lista) {
 func (l *Lista) ValidarEmpleado(id int, password string) {
 	comprobacion := l.EstaVacia()
 	fmt.Println(comprobacion)
-	auxiliar := l.inicio
+	auxiliar := l.Inicio
 	for auxiliar != nil {
 		if auxiliar.empleado.Id == id {
 			if auxiliar.empleado.Password == password {
@@ -99,7 +99,7 @@ func (l *Lista) BuscarEmpleado(id int, password string) *Empleado {
 	if comprobacion {
 		return nil
 	} else {
-		auxiliar := l.inicio
+		auxiliar := l.Inicio
 		for auxiliar != nil {
 			if auxiliar.empleado.Id == id && auxiliar.empleado.Password == password {
 				return auxiliar.empleado
@@ -118,14 +118,14 @@ func (l *Lista) Grafico() {
 	txt += "rankdir=LR;\n"
 	txt += "node[shape = oval];\n"
 	txt += "nodonull2[label=\"null\"];\n"
-	aux := l.inicio
+	aux := l.Inicio
 	count := 0
 
-	for i := 0; i < l.longitud; i++ {
-		txt = txt + "nodo" + strconv.Itoa(i) + "[label=\"" + aux.empleado.nombre + "\n" + "ID: " + strconv.Itoa(aux.empleado.Id) + " \"];\n"
+	for i := 0; i < l.Longitud; i++ {
+		txt = txt + "nodo" + strconv.Itoa(i) + "[label=\"" + aux.empleado.Nombre + "\n" + "ID: " + strconv.Itoa(aux.empleado.Id) + " \"];\n"
 		aux = aux.siguiente
 	}
-	for i := 0; i < l.longitud-1; i++ {
+	for i := 0; i < l.Longitud-1; i++ {
 		c := i + 1
 		txt += "nodo" + strconv.Itoa(i) + "->nodo" + strconv.Itoa(c) + ";\n"
 		count += 1
