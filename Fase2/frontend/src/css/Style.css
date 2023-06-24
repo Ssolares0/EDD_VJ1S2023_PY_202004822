@@ -21,7 +21,7 @@ body {
 .screen {		
 	background: linear-gradient(90deg, #5D54A4, #7C78B8);		
 	position: relative;	
-	height: 600px;
+	height: 660px;
 	width: 360px;	
 	box-shadow: 0px 0px 24px #5C5696;
 }
@@ -195,4 +195,8 @@ body {
 	bottom: 0px;
 	right: 0px;
 	color: #fff;
+}
+.button1 {
+	background-color: #e0aed8; /* Green */
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }

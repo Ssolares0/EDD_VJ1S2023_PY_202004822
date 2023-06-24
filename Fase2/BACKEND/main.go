@@ -20,8 +20,8 @@ var tree *Estructuras2.Arbol
 var simple *Estructuras2.Lista
 
 type ResponseImage struct {
-	Base64 string
-	Name   string
+	ImageBase64 string
+	Name        string
 }
 
 type User struct {
@@ -35,12 +35,49 @@ type Rutas struct {
 	Pedidos   string
 }
 
+// Estructura para el reporte de pedidos
+type Pedido struct {
+	IDCliente int    `json:"id_cliente"`
+	Imagen    string `json:"imagen"`
+	Cliente   string `json:"cliente"`
+}
+type Datos struct {
+	Pedidos []Pedido `json:"pedidos"`
+}
+
 var UserNew User
 var RutasNew Rutas
+var ListaNuevaSimple = Estructuras2.New_Lista()
 
 func main() {
 	tree = &Estructuras2.Arbol{Raiz: nil}
 	simple = &Estructuras2.Lista{Inicio: nil}
+
+	/*
+		app := fiber.New()
+		app.Use(cors.New())
+
+		app.Get("/", func(c *fiber.Ctx) error {
+			return c.JSON(&fiber.Map{
+				"status": "ok",
+
+
+			})
+
+		})
+
+		app.Post("/AddTree", func(c *fiber.Ctx) error {
+			var newNodo Estructuras2.NodoArbol
+			c.BodyParser(&newNodo)
+			tree.Insertar(newNodo)
+			return c.JSON(&fiber.Map{
+				"status": "ok",
+			})
+
+		})
+
+
+	*/
 
 	r := mux.NewRouter()
 
@@ -48,7 +85,7 @@ func main() {
 	r.HandleFunc("/ViewTree", ViewTree).Methods("GET")
 
 	//Recibimos datos del frontend
-	r.HandleFunc("/AddTree", AddTree).Methods("POST")
+	//r.HandleFunc("/AddTree", AddTree).Methods("POST")
 
 	r.HandleFunc("/ReporteTree", SendReporte).Methods("GET")
 
@@ -100,9 +137,20 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		UserNew.Admin = true
 		json.NewEncoder(w).Encode(UserNew)
 	} else {
-		w.WriteHeader(http.StatusCreated)
-		UserNew.Admin = false
-		json.NewEncoder(w).Encode(UserNew)
+		IDEMPLEADO, _ := strconv.Atoi(UserNew.Username)
+
+		fmt.Println(IDEMPLEADO, UserNew.Password)
+		comprobar := ListaNuevaSimple.BuscarEmpleado(IDEMPLEADO, UserNew.Password)
+
+		if comprobar == nil {
+			fmt.Println("No se encontro el usuario")
+		} else {
+			w.WriteHeader(http.StatusCreated)
+			UserNew.Admin = false
+			json.NewEncoder(w).Encode(UserNew)
+
+		}
+
 	}
 
 }
@@ -125,7 +173,6 @@ func CargaMasiva(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(RutasNew)
 
 	file, err := os.Open(RutasNew.Empleados)
 	if err != nil {
@@ -141,8 +188,27 @@ func CargaMasiva(w http.ResponseWriter, req *http.Request) {
 			continue
 		}
 		sv, _ := strconv.Atoi(record[0])
-		simple.AgregarEmpleado(record[1], sv, record[2], record[2])
-		json.NewEncoder(w).Encode(&simple)
+
+		ListaNuevaSimple.AgregarEmpleado(record[1], sv, record[2], record[3])
+		fmt.Println(record[0], record[1], record[2], record[3])
+
+	}
+
+	archJson, err := os.Open(RutasNew.Pedidos)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer archJson.Close()
+
+	var data Datos
+	decoder := json.NewDecoder(archJson)
+	err = decoder.Decode(&data)
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, pedido := range data.Pedidos {
+		fmt.Println(pedido.IDCliente)
+		tree.InsertarElemento(pedido.IDCliente)
 
 	}
 
@@ -152,7 +218,7 @@ func CargaMasiva(w http.ResponseWriter, req *http.Request) {
 func MostrarEmpleados(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(simple)
+	json.NewEncoder(w).Encode(&ListaNuevaSimple)
 }
 
 func MostrarRutas(w http.ResponseWriter, req *http.Request) {
@@ -168,30 +234,37 @@ func ViewTree(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(&tree)
 }
 
+/*
 // Funcion que nos permite agregar un nuevo nodo al arbol
 func AddTree(w http.ResponseWriter, req *http.Request) {
 	reqBody, err := ioutil.ReadAll(req.Body)
+	fmt.Println(reqBody)
 	var newNodo Estructuras2.NodoArbol
 	if err != nil {
 		fmt.Fprintf(w, "No es valido!!")
 	}
 	json.Unmarshal(reqBody, &newNodo)
+
 	tree.InsertarElemento(newNodo.Valor)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newNodo)
 }
-
+*/
 // Funcion que nos permite enviar el reporte del arbol
 func SendReporte(w http.ResponseWriter, req *http.Request) {
-	var image ResponseImage = ResponseImage{Name: "cola.jpg"}
+	tree.Grafico()
+
+	var image ResponseImage = ResponseImage{Name: "arbolAVL.jpg"}
 
 	imageBytes, err := ioutil.ReadFile(image.Name)
 	if err != nil {
-		fmt.Fprintf(w, "La imagen no es valida")
+		http.Error(w, "Error al leer la imagen", http.StatusInternalServerError)
+		return
 	}
-	image.Base64 = "data:image/jpg;base64," + base64.StdEncoding.EncodeToString(imageBytes)
-	fmt.Fprintf(w, "%+v", image)
+	//image.Base64 = "data:image/jpg;base64," + base64.StdEncoding.EncodeToString(imageBytes)
+	image.ImageBase64 = "data:image/jpg;base64," + base64.StdEncoding.EncodeToString(imageBytes)
+
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusCreated)

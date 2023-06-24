@@ -23,7 +23,8 @@ export const Login = () => {
             if (data.Admin ===true){
                 window.open('http://localhost:3000/Admin','_self');
             } else if (data.Admin ===false){
-                window.alert('Pare');
+                window.alert('Bienvenido Empleado ');
+                window.open('http://localhost:3000/Empleado','_self');
             }
           })
           .catch(error => {

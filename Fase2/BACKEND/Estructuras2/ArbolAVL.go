@@ -2,6 +2,7 @@ package Estructuras2
 
 import (
 	"math"
+	"strconv"
 )
 
 type NodoArbol struct {
@@ -101,4 +102,64 @@ func (a *Arbol) Height(raiz *NodoArbol) int {
 		return 0
 	}
 	return raiz.Altura
+}
+
+func (a *Arbol) Grafico() {
+	cadena := ""
+	nombre_archivo := "./arbolAVL.dot"
+	nombre_imagen := "./arbolAVL.jpg"
+	if a.Raiz != nil {
+		cadena += "digraph arbol{ "
+		cadena += a.retornarValoresArbol(a.Raiz, 0)
+		cadena += "}"
+	}
+	createArch(nombre_archivo)
+	escribirEnArch(cadena, nombre_archivo)
+	run(nombre_imagen, nombre_archivo)
+
+}
+
+func (a *Arbol) retornarValoresArbol(raiz *NodoArbol, indice int) string {
+	cadena := ""
+	numero := indice + 1
+	if raiz != nil {
+		cadena += "\""
+		cadena += strconv.Itoa(raiz.Valor)
+		cadena += "\" ;"
+		if raiz.Izquierdo != nil && raiz.Derecho != nil {
+			cadena += " x" + strconv.Itoa(numero) + " [label=\"\",width=.1,style=invis];"
+			cadena += "\""
+			cadena += strconv.Itoa(raiz.Valor)
+			cadena += "\" -> "
+			cadena += a.retornarValoresArbol(raiz.Izquierdo, numero)
+			cadena += "\""
+			cadena += strconv.Itoa(raiz.Valor)
+			cadena += "\" -> "
+			cadena += a.retornarValoresArbol(raiz.Derecho, numero)
+			cadena += "{rank=same" + "\"" + strconv.Itoa(raiz.Izquierdo.Valor) + "\"" + " -> " + "\"" + strconv.Itoa(raiz.Derecho.Valor) + "\"" + " [style=invis]}; "
+		} else if raiz.Izquierdo != nil && raiz.Derecho == nil {
+			cadena += " x" + strconv.Itoa(numero) + " [label=\"\",width=.1,style=invis];"
+			cadena += "\""
+			cadena += strconv.Itoa(raiz.Valor)
+			cadena += "\" -> "
+			cadena += a.retornarValoresArbol(raiz.Izquierdo, numero)
+			cadena += "\""
+			cadena += strconv.Itoa(raiz.Valor)
+			cadena += "\" -> "
+			cadena += "x" + strconv.Itoa(numero) + "[style=invis]"
+			cadena += "{rank=same" + "\"" + strconv.Itoa(raiz.Izquierdo.Valor) + "\"" + " -> " + "x" + strconv.Itoa(numero) + " [style=invis]}; "
+		} else if raiz.Izquierdo == nil && raiz.Derecho != nil {
+			cadena += " x" + strconv.Itoa(numero) + " [label=\"\",width=.1,style=invis];"
+			cadena += "\""
+			cadena += strconv.Itoa(raiz.Valor)
+			cadena += "\" -> "
+			cadena += "x" + strconv.Itoa(numero) + "[style=invis]"
+			cadena += "; \""
+			cadena += strconv.Itoa(raiz.Valor)
+			cadena += "\" -> "
+			cadena += a.retornarValoresArbol(raiz.Derecho, numero)
+			cadena += "{rank=same" + " x" + strconv.Itoa(numero) + " -> \"" + strconv.Itoa(raiz.Derecho.Valor) + "\"" + " [style=invis]}; "
+		}
+	}
+	return cadena
 }

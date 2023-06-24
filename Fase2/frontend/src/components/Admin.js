@@ -36,6 +36,10 @@ export const Admin = () => {
         window.open('http://localhost:3000/', '_self');
     }
 
+    const Reporte = async(e) => {
+        window.open('http://localhost:3000/Reportes', '_self');
+    }
+
    
 
         
@@ -62,6 +66,10 @@ export const Admin = () => {
                     </div>
                     <button className="button login__submit"  value="Iniciar sesión"type ="submit"id="submit">
                         <span className="button__text">Enviar Datos</span>
+                        <i className="button__icon fas fa-chevron-right"></i>
+                    </button>	
+                    <button className="button login__submit"  value="Reportes" onClick={Reporte}>
+                        <span className="button__text">Reportes</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>	
                     <button className="button login__submit"  value="Cerrar sesión" onClick={cerrarSesion}>

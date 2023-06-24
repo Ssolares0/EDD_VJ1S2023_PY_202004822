@@ -3,6 +3,8 @@ import './css/Style.css';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import { Login } from './components/Login';
 import { Admin } from './components/Admin';
+import { Empleado } from './components/Empleado';
+import { Reportes } from './components/Reportes';
 
 function App() {
   /*return (
@@ -28,6 +30,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/Admin" element={<Admin />}></Route>
+        <Route path="/Empleado" element={<Empleado/>}></Route>
+        <Route path="/Reportes" element={<Reportes />} />
       </Routes>  
     </Router>
 
