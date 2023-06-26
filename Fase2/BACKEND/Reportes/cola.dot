@@ -1,0 +1,29 @@
+digraph cola{
+rankdir=LR;
+node[shape = record];
+nodonull2[label="null"];
+nodo0[label="{2480|corrin }"];
+nodo1[label="{3589|letra_r }"];
+nodo2[label="{4575|letra_r }"];
+nodo3[label="{4983|ave }"];
+nodo4[label="{5030|mario }"];
+nodo5[label="{5313|hulk }"];
+nodo6[label="{5407|tux }"];
+nodo7[label="{5965|hora_de_aventura }"];
+nodo8[label="{6344|bmo }"];
+nodo9[label="{6676|ironman }"];
+nodo10[label="{7667|ave }"];
+nodo11[label="{7772|deadpool }"];
+nodo0->nodo1;
+nodo1->nodo2;
+nodo2->nodo3;
+nodo3->nodo4;
+nodo4->nodo5;
+nodo5->nodo6;
+nodo6->nodo7;
+nodo7->nodo8;
+nodo8->nodo9;
+nodo9->nodo10;
+nodo10->nodo11;
+nodo11->nodonull2;
+}

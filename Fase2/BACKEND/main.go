@@ -18,6 +18,7 @@ import (
 
 var tree *Estructuras2.Arbol
 var simple *Estructuras2.Lista
+var cola *Estructuras2.Lista_cola
 
 type ResponseImage struct {
 	ImageBase64 string
@@ -48,6 +49,7 @@ type Datos struct {
 var UserNew User
 var RutasNew Rutas
 var ListaNuevaSimple = Estructuras2.New_Lista()
+var ListaNuevaCola = Estructuras2.New_ListaCola()
 
 func main() {
 	tree = &Estructuras2.Arbol{Raiz: nil}
@@ -208,9 +210,11 @@ func CargaMasiva(w http.ResponseWriter, req *http.Request) {
 	}
 	for _, pedido := range data.Pedidos {
 		fmt.Println(pedido.IDCliente)
-		tree.InsertarElemento(pedido.IDCliente)
+		tree.InsertarElemento(pedido.IDCliente, pedido.Imagen)
 
 	}
+	tree.Grafico()
+	tree.Inorder()
 
 }
 
@@ -253,7 +257,6 @@ func AddTree(w http.ResponseWriter, req *http.Request) {
 */
 // Funcion que nos permite enviar el reporte del arbol
 func SendReporte(w http.ResponseWriter, req *http.Request) {
-	tree.Grafico()
 
 	var image ResponseImage = ResponseImage{Name: "arbolAVL.jpg"}
 

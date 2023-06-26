@@ -1,14 +1,18 @@
 package Estructuras2
 
 import (
+	"fmt"
 	"math"
 	"strconv"
 )
+
+var Cola = New_ListaCola()
 
 type NodoArbol struct {
 	Izquierdo  *NodoArbol
 	Derecho    *NodoArbol
 	Valor      int
+	Imagen     string
 	Altura     int
 	Equilibrio int
 }
@@ -17,8 +21,8 @@ type Arbol struct {
 	Raiz *NodoArbol
 }
 
-func (a *Arbol) InsertarElemento(valor int) {
-	nuevoNodo := &NodoArbol{Valor: valor}
+func (a *Arbol) InsertarElemento(valor int, imagen string) {
+	nuevoNodo := &NodoArbol{Valor: valor, Imagen: imagen}
 	a.Raiz = a.insertarNodo(a.Raiz, nuevoNodo)
 }
 
@@ -103,11 +107,32 @@ func (a *Arbol) Height(raiz *NodoArbol) int {
 	}
 	return raiz.Altura
 }
+func (a *Arbol) Inorder() {
+	a._inorder(a.Raiz)
+	fmt.Println()
+}
+
+func (a *Arbol) _inorder(tmp *NodoArbol) {
+	if tmp != nil {
+		a._inorder(tmp.Izquierdo)
+		fmt.Printf("%d ", tmp.Valor)
+		fmt.Printf("%s ", tmp.Imagen)
+
+		valorInt := strconv.Itoa(tmp.Valor)
+
+		//Agregar valores a la cola
+		Cola.Colar(valorInt, tmp.Imagen)
+
+		a._inorder(tmp.Derecho)
+
+	}
+	Cola.GraficarCola()
+}
 
 func (a *Arbol) Grafico() {
 	cadena := ""
-	nombre_archivo := "./arbolAVL.dot"
-	nombre_imagen := "./arbolAVL.jpg"
+	nombre_archivo := "arbolAVL.dot"
+	nombre_imagen := "arbolAVL.jpg"
 	if a.Raiz != nil {
 		cadena += "digraph arbol{ "
 		cadena += a.retornarValoresArbol(a.Raiz, 0)

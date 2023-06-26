@@ -6,6 +6,7 @@ import { useRef } from 'react';
 export const Admin = () => {
     const [Empleados, setEmpleados] = useState(0);
     const [Pedidos, setPedidos] = useState(0);
+    const [imagen, setImagen] = useState();
     
   
    
@@ -34,11 +35,20 @@ export const Admin = () => {
 
     const cerrarSesion = async(e) => {
         window.open('http://localhost:3000/', '_self');
-    }
+    };
+
+    const validar = (data) =>{
+        console.log(data)
+        setImagen(data.ImageBase64)
+    };
 
     const Reporte = async(e) => {
-        window.open('http://localhost:3000/Reportes', '_self');
-    }
+        e.preventDefault();
+        fetch('http://localhost:3001/ReporteTree',{
+        })
+        .then(response => response.json())
+        .then(data => validar(data));
+    };
 
    
 
@@ -64,18 +74,23 @@ export const Admin = () => {
                         <i className="login__icon fas fa-user"></i>
                         <input type="text" className="login__input" placeholder="Cargar Pedidos" required onChange={e => setPedidos(e.target.value)}/>
                     </div>
-                    <button className="button login__submit"  value="Iniciar sesión"type ="submit"id="submit">
+                    <br/>
+                    <button className="button login__submit" type ="submit">
                         <span className="button__text">Enviar Datos</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>	
-                    <button className="button login__submit"  value="Reportes" onClick={Reporte}>
+                    <br/>
+                    <button className="button login__submit" onClick={Reporte}>
                         <span className="button__text">Reportes</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>	
-                    <button className="button login__submit"  value="Cerrar sesión" onClick={cerrarSesion}>
+                    <br/>
+                    <button className="button login__submit" onClick={cerrarSesion}>
                         <span className="button__text">Cerrar Sesion</span>
                         <i className="button__icon fas fa-chevron-right"></i>
-                    </button>				
+                    </button>
+                    <br/>		
+                    <img src={imagen} width="250" height="250" alt='some value' />		
                 </form>
                 
             </div>

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 
 export const Reportes = () => {
-    const [imagen, setImagen] = useState('https://yakurefu.com/wp-//2020/02/Chi_by_wallabby.jpg');
+    const [imagen, setImagen] = useState();
     
     const validar = (data) =>{
         console.log(data)
@@ -44,14 +44,21 @@ export const Reportes = () => {
 
     return (
         
-        <div className="container">
-            <button className="button login__submit"  value="Ver reporte" onClick={pedirReporte}>
-                        <span className="button__text">Enviar Datos</span>
-                        <i className="button__icon fas fa-chevron-right"></i>
-            </button>	
-            <img src={imagen}  />
-       
+        <div className="form-signin">
+        <div className="text-center">
+            <form className="card card-body">
+                <h1 className="h3 mb-3 fw-normal">Arbol AVL</h1>
+                <label htmlFor="inputEmail" className="visually-hidden">Valor</label>
+                
+        
+            
+                <br/>
+                <button className="w-100 btn btn-lg btn-primary" onClick={pedirReporte}>Ver Reporte</button>
+                <br/>
+                <img src={imagen} width="250" height="250" alt='some value' />
+            </form>
         </div>
+      </div>
         
     );
 

@@ -1,20 +1,52 @@
 {
-    "pedidos":[
-        {
-            "id_cliente":20,
-            "imagen":"bmo"
-        },
-        {
-            "id_cliente":12,
-            "cliente":"mario"
-        },
-        {
-            "id_cliente":11,
-            "imagen":"deadpool"
-        },
-        {
-            "id_cliente":6,
-            "imagen":"hulk"
-        }
-    ]
+	"pedidos":[
+		{
+			"id_cliente": 4983,
+			"imagen": "ave"
+		},
+		{
+			"id_cliente": 3589,
+			"imagen": "letra_r"
+		},
+		{
+			"id_cliente": 5407,
+			"imagen": "tux"
+		},
+		{
+			"id_cliente": 5030,
+			"imagen": "mario"
+		},
+		{
+			"id_cliente": 6676,
+			"imagen": "ironman"
+		},
+		{
+			"id_cliente": 5313,
+			"imagen": "hulk"
+		},
+		{
+			"id_cliente": 5965,
+			"imagen": "hora_de_aventura"
+		},
+		{
+			"id_cliente": 7772,
+			"imagen": "deadpool"
+		},
+		{
+			"id_cliente": 2480,
+			"imagen": "corrin"
+		},
+		{
+			"id_cliente": 6344,
+			"imagen": "bmo"
+		},
+		{
+			"id_cliente": 7667,
+			"imagen": "ave"
+		},
+		{
+			"id_cliente": 4575,
+			"imagen": "letra_r"
+		}
+	]
 }

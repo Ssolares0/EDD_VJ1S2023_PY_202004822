@@ -1,11 +1,19 @@
 
 export const Empleado = () => {
     const handleSubmit = async(e) => {
+        e.preventDefault();
+        
         
     }
 
     const cerrarSesion = async(e) => {
         window.open('http://localhost:3000/', '_self');
+        
+    }
+
+    const Filtros = async(e) => {
+        window.open('http://localhost:3000/Filtros', '_self');
+        
     }
 
     return (
@@ -17,8 +25,8 @@ export const Empleado = () => {
                 
                 <form  onSubmit={handleSubmit} className="login">
                 <h3 className='letra'>Menu Empleado</h3>
-                    <button className="button login__submit"  value="Aplicacion Filtros"type ="submit"id="filtros">
-                        <span className="button__text">Aplicacion de Filtors</span>
+                    <button className="button login__submit"  value="Aplicacion Filtros" onClick={Filtros}>
+                        <span className="button__text">Aplicacion de Filtros</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>
                     <button className="button login__submit"  value="Generar Factura"type ="submit"id="factura">
