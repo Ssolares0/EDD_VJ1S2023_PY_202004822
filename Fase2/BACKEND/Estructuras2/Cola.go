@@ -75,6 +75,11 @@ func MostrarCola(l *Lista_cola) {
 	}
 }
 
+func (l *Lista_cola) MostrarPrimerValor() (string, string) {
+	aux := l.Inicio
+	return aux.Cliente.Id, aux.Cliente.Nombre
+}
+
 func (c *Lista_cola) GraficarCola() {
 	nombre_archivo := "Reportes/cola.dot"
 	nombre_imagen := "Reportes/cola.jpg"

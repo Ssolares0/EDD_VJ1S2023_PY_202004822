@@ -80,12 +80,12 @@ export const Admin = () => {
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>	
                     <br/>
-                    <button className="button login__submit" onClick={Reporte}>
+                    <button className="button login__submit" type= "button" onClick={Reporte}>
                         <span className="button__text">Reportes</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>	
                     <br/>
-                    <button className="button login__submit" onClick={cerrarSesion}>
+                    <button className="button login__submit" type= "button"onClick={cerrarSesion}>
                         <span className="button__text">Cerrar Sesion</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>

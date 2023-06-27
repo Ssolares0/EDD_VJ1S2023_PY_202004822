@@ -6,6 +6,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -23,6 +24,10 @@ var cola *Estructuras2.Lista_cola
 type ResponseImage struct {
 	ImageBase64 string
 	Name        string
+}
+
+type TipoFiltro struct {
+	Filtro string
 }
 
 type User struct {
@@ -48,8 +53,11 @@ type Datos struct {
 
 var UserNew User
 var RutasNew Rutas
+var TipoFiltroNew TipoFiltro
 var ListaNuevaSimple = Estructuras2.New_Lista()
 var ListaNuevaCola = Estructuras2.New_ListaCola()
+var ListaNuevaArbol = Estructuras2.New_Arbol()
+var ListaNuevaDispersa = Estructuras2.NewMatriz()
 
 func main() {
 	tree = &Estructuras2.Arbol{Raiz: nil}
@@ -108,6 +116,11 @@ func main() {
 
 	//Obtener datos empleados
 	r.HandleFunc("/Empleados", MostrarEmpleados).Methods("GET")
+
+	//Crear Espejo X
+	r.HandleFunc("/Filtros", Filtros).Methods("POST")
+
+	r.HandleFunc("/MostrarFiltros", mostrarFiltros).Methods("GET")
 
 	//menu adminisrador
 	//r.HandleFunc("/MenuAdmin", MenuAdmin).Methods("GET")
@@ -210,11 +223,18 @@ func CargaMasiva(w http.ResponseWriter, req *http.Request) {
 	}
 	for _, pedido := range data.Pedidos {
 		fmt.Println(pedido.IDCliente)
-		tree.InsertarElemento(pedido.IDCliente, pedido.Imagen)
+		ListaNuevaArbol.InsertarElemento(pedido.IDCliente, pedido.Imagen)
 
 	}
-	tree.Grafico()
-	tree.Inorder()
+	ListaNuevaArbol.Grafico()
+	ListaNuevaArbol.Inorder()
+	list := ListaNuevaArbol.Raiz.ValorColado
+	list2 := ListaNuevaArbol.Raiz.ImagenColado
+	for x := 0; x < len(list); x++ {
+		//fmt.Println(list[x], list2[x])
+		ListaNuevaCola.Colar(list[x], list2[x])
+	}
+	ListaNuevaCola.GraficarCola()
 
 }
 
@@ -280,4 +300,280 @@ func ResetTree(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(&tree)
+}
+
+func Filtros(w http.ResponseWriter, req *http.Request) {
+	reqBody, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		fmt.Fprintf(w, "No es valido!!")
+	}
+
+	json.Unmarshal(reqBody, &TipoFiltroNew)
+
+	Id, image := ListaNuevaCola.MostrarPrimerValor()
+	fmt.Println(Id, image)
+	ListaNuevaCola.Descolar()
+
+	generarMatrizOriginal(Id, image)
+
+	if TipoFiltroNew.Filtro == "Negativo" {
+		fmt.Println("Estas en Negativo")
+
+	}
+	if TipoFiltroNew.Filtro == "EscalaGrises" {
+		fmt.Println("Estas en EscalaGrises")
+	}
+
+	if TipoFiltroNew.Filtro == "EspejoX" {
+		fmt.Println("Estas en EspejoX")
+		generarMatrizX(Id, image)
+	}
+	if TipoFiltroNew.Filtro == "EspejoY" {
+		fmt.Println("Estas en EspejoY")
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(TipoFiltroNew)
+}
+
+func mostrarFiltros(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(TipoFiltroNew)
+}
+
+func generarMatrizOriginal(id string, image string) {
+	ListaNuevaDispersa = Estructuras2.NewMatriz()
+	Layer := []int{}
+	File := []string{}
+	//Config := []string{}
+	//Value := []int{}
+	image_width := 0
+	image_height := 0
+	pixel_width := 0
+	pixel_height := 0
+
+	ruta := "csv/" + image + "/inicial.csv"
+	fmt.Println("La ruta es:  " + ruta)
+
+	file, err := os.Open(ruta)
+	if err != nil {
+		fmt.Println(err)
+	}
+	records, err := csv.NewReader(file).ReadAll()
+	if err != nil {
+		return
+	}
+	for _, record := range records {
+		if (record[0] == "Layer") || (record[0] == "layer") {
+			continue
+		}
+
+		sv, _ := strconv.Atoi(record[0])
+		Layer = append(Layer, sv)
+		File = append(File, record[1])
+
+	}
+	/*fmt.Println("Layer:  ", Layer)
+	fmt.Println("File:  ", File)*/
+
+	for i := 0; i < len(Layer); i++ {
+		if Layer[i] == 0 {
+			config := File[i]
+			fmt.Println("La config es:  " + config)
+
+			rutaconfig := "csv/" + image + "/" + config
+
+			file2, err2 := os.Open(rutaconfig)
+			if err2 != nil {
+				fmt.Println(err2)
+			}
+			records2, err2 := csv.NewReader(file2).ReadAll()
+			if err2 != nil {
+				return
+			}
+			for _, record2 := range records2 {
+				if (record2[0] == "config") || (record2[0] == "Config") {
+					continue
+				}
+				if record2[0] == "image_width" {
+					image_width, _ = strconv.Atoi(record2[1])
+				}
+
+				if record2[0] == "image_height" {
+					image_height, _ = strconv.Atoi(record2[1])
+				}
+				if record2[0] == "pixel_width" {
+					pixel_width, _ = strconv.Atoi(record2[1])
+				}
+				if record2[0] == "pixel_height" {
+					pixel_height, _ = strconv.Atoi(record2[1])
+				}
+
+			}
+			ListaNuevaDispersa.MandarData(image_width, image_height, pixel_width, pixel_height, image)
+			fmt.Println("image_width:  ", image_width, "image_height:  ", image_height, "pixel_width:  ", pixel_width, "pixel_height:  ", pixel_height)
+
+		} else {
+			fmt.Println("Si entrooo")
+
+			rutaCapa := "csv/" + image + "/" + File[i]
+
+			file, err := os.Open(rutaCapa)
+			if err != nil {
+				fmt.Println("No pude abrir el archivo")
+				return
+			}
+			defer file.Close()
+
+			lectura := csv.NewReader(file)
+			lectura.Comma = ','
+			x := 0
+			y := 0
+			for {
+				linea, err := lectura.Read()
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					fmt.Println("No pude leer la linea del csv")
+					continue
+				}
+				for i := 0; i < len(linea); i++ {
+					if linea[i] != "x" {
+						//ListaNuevaDispersa.AgregarElementos(x, y, linea[i])
+						//matriz.AgregarElementos(x, y, linea[i])
+						ListaNuevaDispersa.AgregarElementos(x, y, linea[i])
+
+					}
+					x++
+				}
+				x = 0
+				y++
+			}
+
+		}
+
+	}
+
+	ListaNuevaDispersa.Css()
+}
+
+func generarMatrizX(id string, image string) {
+	ListaNuevaDispersa = Estructuras2.NewMatriz()
+	Layer := []int{}
+	File := []string{}
+	//Config := []string{}
+	//Value := []int{}
+	image_width := 0
+	image_height := 0
+	pixel_width := 0
+	pixel_height := 0
+
+	ruta := "csv/" + image + "/inicial.csv"
+	fmt.Println("La ruta es:  " + ruta)
+
+	file, err := os.Open(ruta)
+	if err != nil {
+		fmt.Println(err)
+	}
+	records, err := csv.NewReader(file).ReadAll()
+	if err != nil {
+		return
+	}
+	for _, record := range records {
+		if (record[0] == "Layer") || (record[0] == "layer") {
+			continue
+		}
+
+		sv, _ := strconv.Atoi(record[0])
+		Layer = append(Layer, sv)
+		File = append(File, record[1])
+
+	}
+	/*fmt.Println("Layer:  ", Layer)
+	fmt.Println("File:  ", File)*/
+
+	for i := 0; i < len(Layer); i++ {
+		if Layer[i] == 0 {
+			config := File[i]
+			fmt.Println("La config es:  " + config)
+
+			rutaconfig := "csv/" + image + "/" + config
+
+			file2, err2 := os.Open(rutaconfig)
+			if err2 != nil {
+				fmt.Println(err2)
+			}
+			records2, err2 := csv.NewReader(file2).ReadAll()
+			if err2 != nil {
+				return
+			}
+			for _, record2 := range records2 {
+				if (record2[0] == "config") || (record2[0] == "Config") {
+					continue
+				}
+				if record2[0] == "image_width" {
+					image_width, _ = strconv.Atoi(record2[1])
+				}
+
+				if record2[0] == "image_height" {
+					image_height, _ = strconv.Atoi(record2[1])
+				}
+				if record2[0] == "pixel_width" {
+					pixel_width, _ = strconv.Atoi(record2[1])
+				}
+				if record2[0] == "pixel_height" {
+					pixel_height, _ = strconv.Atoi(record2[1])
+				}
+
+			}
+			ListaNuevaDispersa.MandarData(image_width, image_height, pixel_width, pixel_height, image+"EspejoX")
+			fmt.Println("image_width:  ", image_width, "image_height:  ", image_height, "pixel_width:  ", pixel_width, "pixel_height:  ", pixel_height)
+
+		} else {
+			fmt.Println("Si entrooo")
+
+			rutaCapa := "csv/" + image + "/" + File[i]
+
+			file, err := os.Open(rutaCapa)
+			if err != nil {
+				fmt.Println("No pude abrir el archivo")
+				return
+			}
+			defer file.Close()
+
+			lectura := csv.NewReader(file)
+			lectura.Comma = ','
+			x := 0
+			y := 0
+			for {
+				linea, err := lectura.Read()
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					fmt.Println("No pude leer la linea del csv")
+					continue
+				}
+				for i := 0; i < len(linea); i++ {
+					if linea[i] != "x" {
+						//ListaNuevaDispersa.AgregarElementos(x, y, linea[i])
+						//matriz.AgregarElementos(x, y, linea[i])
+						ListaNuevaDispersa.AgregarElementos(x, y, linea[i])
+
+					}
+					x++
+				}
+				x = 0
+				y++
+			}
+
+		}
+
+	}
+
+	ListaNuevaDispersa.CssX()
+
 }

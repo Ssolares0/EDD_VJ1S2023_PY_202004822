@@ -9,12 +9,14 @@ import (
 var Cola = New_ListaCola()
 
 type NodoArbol struct {
-	Izquierdo  *NodoArbol
-	Derecho    *NodoArbol
-	Valor      int
-	Imagen     string
-	Altura     int
-	Equilibrio int
+	Izquierdo    *NodoArbol
+	Derecho      *NodoArbol
+	Valor        int
+	Imagen       string
+	Altura       int
+	Equilibrio   int
+	ValorColado  []string
+	ImagenColado []string
 }
 
 type Arbol struct {
@@ -109,7 +111,7 @@ func (a *Arbol) Height(raiz *NodoArbol) int {
 }
 func (a *Arbol) Inorder() {
 	a._inorder(a.Raiz)
-	fmt.Println()
+
 }
 
 func (a *Arbol) _inorder(tmp *NodoArbol) {
@@ -119,14 +121,16 @@ func (a *Arbol) _inorder(tmp *NodoArbol) {
 		fmt.Printf("%s ", tmp.Imagen)
 
 		valorInt := strconv.Itoa(tmp.Valor)
+		a.Raiz.ValorColado = append(a.Raiz.ValorColado, valorInt)
+		a.Raiz.ImagenColado = append(a.Raiz.ImagenColado, tmp.Imagen)
 
 		//Agregar valores a la cola
-		Cola.Colar(valorInt, tmp.Imagen)
+		//Cola.Colar(valorInt, tmp.Imagen)
 
 		a._inorder(tmp.Derecho)
 
 	}
-	Cola.GraficarCola()
+
 }
 
 func (a *Arbol) Grafico() {
@@ -187,4 +191,8 @@ func (a *Arbol) retornarValoresArbol(raiz *NodoArbol, indice int) string {
 		}
 	}
 	return cadena
+}
+
+func New_Arbol() *Arbol {
+	return &Arbol{nil}
 }

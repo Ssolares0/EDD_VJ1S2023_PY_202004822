@@ -186,6 +186,46 @@ func (l *Matriz) Css() {
 	escribirEnArch(contenidocss, archivocss)
 
 }
+func (l *Matriz) CssX() {
+
+	archivocss := "Resultados/" + l.Name_imagen + ".css" // csv/mario/mario.css
+	contenidocss := "body{\n background: #333333; \n height: 100vh; \n display: flex; \n justify-content: center; \n align-items: center; \n } \n"
+	contenidocss += ".canvas{ \n width: " + strconv.Itoa(l.Image_width*l.Pixel_width) + "px; \n"
+	contenidocss += "height: " + strconv.Itoa(l.Image_height*l.Pixel_height) + "px; \n }"
+	contenidocss += ".pixel{ \n width: " + strconv.Itoa(l.Pixel_width) + "px; \n"
+	contenidocss += "height: " + strconv.Itoa(l.Pixel_height) + "px; \n float: left; \n } \n"
+	xPixel := 0
+
+	x := 1
+
+	auxiliarFila := l.Raiz.Abajo
+	auxiliarColumna := auxiliarFila.Siguiente
+	for i := 0; i < l.Image_height; i++ {
+		for j := l.Image_width - 1; j >= 0; j-- {
+			if auxiliarColumna != nil {
+				if auxiliarColumna.CoorX == xPixel {
+					contenidocss += ".pixel:nth-child(" + strconv.Itoa(x) + ") { background: rgb(" + strings.ReplaceAll(auxiliarColumna.Color, "-", ",") + "); }\n"
+					auxiliarColumna = auxiliarColumna.Siguiente
+				}
+				xPixel++
+			}
+			x++
+		}
+		xPixel = 0
+		if auxiliarFila.Abajo != nil {
+			auxiliarFila = auxiliarFila.Abajo
+		}
+
+		if auxiliarFila != nil {
+			auxiliarColumna = auxiliarFila.Siguiente
+		}
+	}
+
+	l.generarHTML(l.Name_imagen)
+	createArch(archivocss)
+	escribirEnArch(contenidocss, archivocss)
+
+}
 
 func (l *Matriz) generarHTML(nombreImagen string) {
 	archHTML := "Resultados/" + l.Name_imagen + ".html"

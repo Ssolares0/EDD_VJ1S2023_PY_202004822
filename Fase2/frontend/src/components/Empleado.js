@@ -25,15 +25,15 @@ export const Empleado = () => {
                 
                 <form  onSubmit={handleSubmit} className="login">
                 <h3 className='letra'>Menu Empleado</h3>
-                    <button className="button login__submit"  value="Aplicacion Filtros" onClick={Filtros}>
+                    <button className="button login__submit"  value="Aplicacion Filtros" type= "button" onClick={Filtros}>
                         <span className="button__text">Aplicacion de Filtros</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>
-                    <button className="button login__submit"  value="Generar Factura"type ="submit"id="factura">
+                    <button className="button login__submit"  value="Generar Factura"type= "button" id="factura">
                         <span className="button__text">Generar Factura</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>
-                    <button className="button login__submit"  value="Cerrar sesión" onClick={cerrarSesion}>
+                    <button className="button login__submit"  value="Cerrar sesión"  type= "button"onClick={cerrarSesion}>
                         <span className="button__text">Cerrar Sesion</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>				
