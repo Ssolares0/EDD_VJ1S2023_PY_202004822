@@ -201,10 +201,54 @@ func (l *Matriz) CssX() {
 	auxiliarFila := l.Raiz.Abajo
 	auxiliarColumna := auxiliarFila.Siguiente
 	for i := 0; i < l.Image_height; i++ {
-		for j := l.Image_width - 1; j >= 0; j-- {
+		for j := 0; j < l.Image_width; j++ {
 			if auxiliarColumna != nil {
 				if auxiliarColumna.CoorX == xPixel {
 					contenidocss += ".pixel:nth-child(" + strconv.Itoa(x) + ") { background: rgb(" + strings.ReplaceAll(auxiliarColumna.Color, "-", ",") + "); }\n"
+					auxiliarColumna = auxiliarColumna.Siguiente
+				}
+				xPixel++
+			}
+			x--
+		}
+		x = l.Image_width * (i + 1)
+		xPixel = 0
+		if auxiliarFila.Abajo != nil {
+			auxiliarFila = auxiliarFila.Abajo
+		}
+
+		if auxiliarFila != nil {
+			auxiliarColumna = auxiliarFila.Siguiente
+		}
+	}
+
+	l.generarHTML(l.Name_imagen)
+	createArch(archivocss)
+	escribirEnArch(contenidocss, archivocss)
+
+}
+
+func (l *Matriz) CssGray() {
+	archivocss := "Resultados/" + l.Name_imagen + ".css" // csv/mario/mario.css
+	contenidocss := "body{\n background: #333333; \n height: 100vh; \n display: flex; \n justify-content: center; \n align-items: center; \n } \n"
+	contenidocss += ".canvas{ \n width: " + strconv.Itoa(l.Image_width*l.Pixel_width) + "px; \n"
+	contenidocss += "height: " + strconv.Itoa(l.Image_height*l.Pixel_height) + "px; \n }"
+	contenidocss += ".pixel{ \n width: " + strconv.Itoa(l.Pixel_width) + "px; \n"
+	contenidocss += "height: " + strconv.Itoa(l.Pixel_height) + "px; \n float: left; \n } \n"
+	xPixel := 0
+
+	x := 1
+
+	auxiliarFila := l.Raiz.Abajo
+	auxiliarColumna := auxiliarFila.Siguiente
+	for i := 0; i < l.Image_height; i++ {
+		for j := l.Image_width - 1; j >= 0; j-- {
+			if auxiliarColumna != nil {
+				if auxiliarColumna.CoorX == xPixel {
+					//convertToGrayscale(strings.ReplaceAll(auxiliarColumna.Color, "-", ","))
+					//fmt.Println(convertToGrayscale(strings.ReplaceAll(auxiliarColumna.Color, "-", ",")))
+					//fmt.Println(strings.ReplaceAll(auxiliarColumna.Color, "-", ","))
+					contenidocss += ".pixel:nth-child(" + strconv.Itoa(x) + ") { background: rgb" + convertToGrayscale(strings.ReplaceAll(auxiliarColumna.Color, "-", ",")) + "; }\n"
 					auxiliarColumna = auxiliarColumna.Siguiente
 				}
 				xPixel++
@@ -225,6 +269,86 @@ func (l *Matriz) CssX() {
 	createArch(archivocss)
 	escribirEnArch(contenidocss, archivocss)
 
+}
+func (l *Matriz) CssNegativo() {
+	archivocss := "Resultados/" + l.Name_imagen + ".css" // csv/mario/mario.css
+	contenidocss := "body{\n background: #333333; \n height: 100vh; \n display: flex; \n justify-content: center; \n align-items: center; \n } \n"
+	contenidocss += ".canvas{ \n width: " + strconv.Itoa(l.Image_width*l.Pixel_width) + "px; \n"
+	contenidocss += "height: " + strconv.Itoa(l.Image_height*l.Pixel_height) + "px; \n }"
+	contenidocss += ".pixel{ \n width: " + strconv.Itoa(l.Pixel_width) + "px; \n"
+	contenidocss += "height: " + strconv.Itoa(l.Pixel_height) + "px; \n float: left; \n } \n"
+	xPixel := 0
+
+	x := 1
+
+	auxiliarFila := l.Raiz.Abajo
+	auxiliarColumna := auxiliarFila.Siguiente
+	for i := 0; i < l.Image_height; i++ {
+		for j := l.Image_width - 1; j >= 0; j-- {
+			if auxiliarColumna != nil {
+				if auxiliarColumna.CoorX == xPixel {
+					//convertToGrayscale(strings.ReplaceAll(auxiliarColumna.Color, "-", ","))
+					//fmt.Println(convertToGrayscale(strings.ReplaceAll(auxiliarColumna.Color, "-", ",")))
+					//fmt.Println(strings.ReplaceAll(auxiliarColumna.Color, "-", ","))
+					contenidocss += ".pixel:nth-child(" + strconv.Itoa(x) + ") { background: rgb" + convertToNegative(strings.ReplaceAll(auxiliarColumna.Color, "-", ",")) + "; }\n"
+					auxiliarColumna = auxiliarColumna.Siguiente
+				}
+				xPixel++
+			}
+			x++
+		}
+		xPixel = 0
+		if auxiliarFila.Abajo != nil {
+			auxiliarFila = auxiliarFila.Abajo
+		}
+
+		if auxiliarFila != nil {
+			auxiliarColumna = auxiliarFila.Siguiente
+		}
+	}
+
+	l.generarHTML(l.Name_imagen)
+	createArch(archivocss)
+	escribirEnArch(contenidocss, archivocss)
+
+}
+
+func convertToGrayscale(rgbColor string) string {
+	// Extraer los valores RGB del string
+
+	colorValues := strings.Split(rgbColor, ",")
+
+	r, _ := strconv.Atoi(strings.TrimSpace(colorValues[0]))
+	g, _ := strconv.Atoi(strings.TrimSpace(colorValues[1]))
+	b, _ := strconv.Atoi(strings.TrimSpace(colorValues[2]))
+
+	// Calcular la intensidad promedio
+	gray := (r + g + b) / 3
+
+	// Crear el nuevo color en escala de grises
+	grayscaleColor := fmt.Sprintf("(%d, %d, %d)", gray, gray, gray)
+
+	return grayscaleColor
+}
+
+func convertToNegative(rgbColor string) string {
+	// Extraer los valores RGB del string
+
+	colorValues := strings.Split(rgbColor, ",")
+
+	r, _ := strconv.Atoi(strings.TrimSpace(colorValues[0]))
+	g, _ := strconv.Atoi(strings.TrimSpace(colorValues[1]))
+	b, _ := strconv.Atoi(strings.TrimSpace(colorValues[2]))
+
+	// Calcular los valores de negativo
+	negativeR := 255 - r
+	negativeG := 255 - g
+	negativeB := 255 - b
+
+	// Crear el nuevo color en negativo
+	negativeColor := fmt.Sprintf("(%d, %d, %d)", negativeR, negativeG, negativeB)
+
+	return negativeColor
 }
 
 func (l *Matriz) generarHTML(nombreImagen string) {

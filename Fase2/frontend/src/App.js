@@ -6,6 +6,8 @@ import { Admin } from './components/Admin';
 import { Empleado } from './components/Empleado';
 import { Reportes } from './components/Reportes';
 import { Filtros } from './components/Filtros';
+import { Factura } from './components/Factura';
+
 
 function App() {
   /*return (
@@ -34,6 +36,7 @@ function App() {
         <Route path="/Empleado" element={<Empleado/>}></Route>
         <Route path="/Reportes" element={<Reportes />} />
         <Route path="/Filtros" element={<Filtros/>}> </Route>
+        <Route path="/Factura" element={<Factura/>}> </Route>
       </Routes>  
     </Router>
 

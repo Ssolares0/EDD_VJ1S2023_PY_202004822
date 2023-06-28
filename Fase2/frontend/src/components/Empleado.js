@@ -11,6 +11,10 @@ export const Empleado = () => {
         
     }
 
+    const GenerarFactura = async(e) => {
+        window.open('http://localhost:3000/Factura', '_self');
+    }
+
     const Filtros = async(e) => {
         window.open('http://localhost:3000/Filtros', '_self');
         
@@ -29,7 +33,7 @@ export const Empleado = () => {
                         <span className="button__text">Aplicacion de Filtros</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>
-                    <button className="button login__submit"  value="Generar Factura"type= "button" id="factura">
+                    <button className="button login__submit"  value="Generar Factura"type= "button" id="factura" onClick={GenerarFactura}>
                         <span className="button__text">Generar Factura</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>
