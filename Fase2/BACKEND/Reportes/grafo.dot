@@ -1,0 +1,23 @@
+graph grafoDirigido{ 
+ rankdir=LR; 
+ node [shape=box]; layout=neato; 
+ nodo00[label="5151"]; 
+node [shape = ellipse]; 
+nodo01[label="2480" ]; 
+nodo11[label="corrin" ]; 
+nodo21[label="Negativo" ]; 
+nodo02[label="3589" ]; 
+nodo12[label="letra_r" ]; 
+nodo22[label="EscalaGrises" ]; 
+nodo03[label="4575" ]; 
+nodo13[label="letra_r" ]; 
+nodo23[label="EspejoX" ]; 
+nodo04[label="4983" ]; 
+nodo14[label="ave" ]; 
+nodo24[label="EspejoY" ]; 
+nodo00 -- nodo01 -- nodo11 -- nodo21[len=1.00]; 
+nodo00 -- nodo02 -- nodo12 -- nodo22[len=1.00]; 
+nodo00 -- nodo03 -- nodo13 -- nodo23[len=1.00]; 
+nodo00 -- nodo04 -- nodo14 -- nodo24[len=1.00]; 
+
+}

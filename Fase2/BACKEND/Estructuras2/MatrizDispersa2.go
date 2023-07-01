@@ -228,6 +228,72 @@ func (l *Matriz) CssX() {
 
 }
 
+func (l *Matriz) CssY() {
+
+	archivocss := "Resultados/" + l.Name_imagen + ".css" // csv/mario/mario.css
+	contenidocss := "body{\n background: #333333; \n height: 100vh; \n display: flex; \n justify-content: center; \n align-items: center; \n } \n"
+	contenidocss += ".canvas{ \n width: " + strconv.Itoa(l.Image_width*l.Pixel_width) + "px; \n"
+	contenidocss += "height: " + strconv.Itoa(l.Image_height*l.Pixel_height) + "px; \n }"
+	contenidocss += ".pixel{ \n width: " + strconv.Itoa(l.Pixel_width) + "px; \n"
+	contenidocss += "height: " + strconv.Itoa(l.Pixel_height) + "px; \n float: left; \n } \n"
+	yPixel := 0
+
+	y := 1
+
+	auxiliarFila := l.Raiz.Abajo
+	auxiliarColumna := auxiliarFila.Siguiente
+
+	for j := 0; j < l.Image_width; j++ {
+		for i := 0; i < l.Image_height; i++ {
+			if auxiliarColumna != nil {
+
+				if auxiliarColumna.CoorY == yPixel {
+					contenidocss += ".pixel:nth-child(" + strconv.Itoa(y) + ") { background: rgb(" + strings.ReplaceAll(auxiliarColumna.Color, "-", ",") + "); }\n"
+					auxiliarColumna = auxiliarColumna.Siguiente
+				}
+				yPixel++
+			}
+			y++
+		}
+		y = (l.Image_height * (j + 1))
+		yPixel = 0
+		if auxiliarFila.Abajo != nil {
+			auxiliarFila = auxiliarFila.Abajo
+		}
+
+		if auxiliarFila != nil {
+			auxiliarColumna = auxiliarFila.Siguiente
+		}
+	}
+	l.generarHTML(l.Name_imagen)
+	createArch(archivocss)
+	escribirEnArch(contenidocss, archivocss)
+
+}
+func (m *Matriz) EspejoY() {
+	var matrizFiltroEspY = &Matriz{Raiz: &NodoMatriz{CoorX: -1, CoorY: -1, Color: "RAIZ"}}
+	auxFila := m.Raiz.Abajo
+	auxColumna := auxFila.Siguiente
+
+	for i := 0; i < m.Image_height; i++ {
+		for j := 0; j < m.Image_width; j++ {
+			if auxColumna != nil {
+				valorY := (m.Image_width - 1) - auxColumna.CoorY
+				matrizFiltroEspY.AgregarElementos(auxColumna.CoorY, valorY, auxColumna.Color)
+				auxColumna = auxColumna.Siguiente
+
+			}
+		}
+		if auxFila.Abajo != nil {
+			auxFila = auxFila.Abajo
+		}
+
+		if auxFila != nil {
+			auxColumna = auxFila.Siguiente
+		}
+	}
+	m.Raiz = matrizFiltroEspY.Raiz
+}
 func (l *Matriz) CssGray() {
 	archivocss := "Resultados/" + l.Name_imagen + ".css" // csv/mario/mario.css
 	contenidocss := "body{\n background: #333333; \n height: 100vh; \n display: flex; \n justify-content: center; \n align-items: center; \n } \n"

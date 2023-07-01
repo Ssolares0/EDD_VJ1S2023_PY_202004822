@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
 export const Factura = () => {
+
+    const [Pago, setPago] = useState(0);
     const [Fecha, setFecha] = useState(0);
     const [Empleado, setEmpleado] = useState(0);
-    const [Usuario, setUsuario] = useState(0);
-    const [Pago, setPago] = useState(0);
+    const [Cliente, setCliente] = useState(0);
+
 
     const handleSubmit = async(e) => {
         e.preventDefault();
         await fetch('http://localhost:3001/GenerarFactura', {
             method: 'POST',
             body: JSON.stringify({
-                Fecha: Fecha,
-                Empleado: Empleado,
-                Usuario: Usuario,
-                Pago: Pago,
+                Biller: Empleado,
+                Customer:Cliente,
+                Payment:Pago,
+                Timestamp:Fecha
             }),
             headers: {
               'Content-Type': 'application/json'
@@ -24,12 +26,7 @@ export const Factura = () => {
 
           .then(data => {
             // Aquí puedes trabajar con la respuesta JSON recibida
-            if (data.Admin ===true){
-                window.open('http://localhost:3000/Admin','_self');
-            } else if (data.Admin ===false){
-                window.alert('Bienvenido Empleado ');
-                window.open('http://localhost:3000/Empleado','_self');
-            }
+
           })
           .catch(error => {
             console.log('Error:', error);
@@ -38,7 +35,25 @@ export const Factura = () => {
         
 
     };
-    
+
+    const validar = (data) =>{
+        console.log(data)
+        setFecha(data.Fecha)
+        setEmpleado(data.Id_Empleado)
+        setCliente(data.Id_Cliente)
+
+
+    };
+
+    const Reporte2 = async(e) => {
+        e.preventDefault();
+        fetch('http://localhost:3001/MostrarDatosFactura',{
+        })
+        .then(response => response.json())
+        .then(data => validar(data));
+    };
+
+
     const regresar = async(e) => {
         window.open('http://localhost:3000/Empleado', '_self');
     }
@@ -63,20 +78,24 @@ export const Factura = () => {
                     <div className="login__field">
                         
                         <i className="login__icon fas fa-user"></i>
-                        <input type="date" className="login__input" placeholder="Fecha" required onChange={e => setFecha(e.target.value)}/>
+                        <input  className="login__input" placeholder="Fecha" value ={Fecha} />
                     </div>
                     <div className="login__field">
                         <i className="login__icon fas fa-lock"></i>
-                        <input type="number" className="login__input" placeholder="Empleado cobrador" required onChange={e =>setEmpleado(e.target.value)} />
+                        <input type="number" className="login__input" placeholder="Empleado cobrador" value ={Empleado} />
                     </div>
                     <div className="login__field">
                         <i className="login__icon fas fa-lock"></i>
-                        <input type="number" className="login__input" placeholder="Usuario" required onChange={e =>setUsuario(e.target.value)} />
+                        <input type="number" className="login__input" placeholder="Usuario" value={Cliente} />
                     </div>
                     <div className="login__field">
                         <i className="login__icon fas fa-lock"></i>
-                        <input type="number" className="login__input" placeholder="Pago" required onChange={e =>setPago(e.target.value)} />
+                        <input type="text" className="login__input" placeholder="Pago"  />
                     </div>
+                    <button className="button login__submit"  value="mostrardata Pago"type ="button"onClick={Reporte2} > 
+                        <span className="button__text">Mostrar Data</span>
+                        <i className="button__icon fas fa-chevron-right"></i>
+                    </button>
                     <button className="button login__submit"  value="Realizar Pago"type ="submit"id="submit" >
                         <span className="button__text">Realizar Pago</span>
                         <i className="button__icon fas fa-chevron-right"></i>

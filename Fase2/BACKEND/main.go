@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -20,6 +21,7 @@ import (
 var tree *Estructuras2.Arbol
 var simple *Estructuras2.Lista
 var cola *Estructuras2.Lista_cola
+var EmpleadoActual string
 
 type ResponseImage struct {
 	ImageBase64 string
@@ -55,17 +57,27 @@ type DatosFactura struct {
 	Fecha       string
 	Id_Empleado int
 	Id_Cliente  int
-	Pago        float64
+	Pago        string
+}
+
+type DatosGenerarFactura struct {
+	Biller    int
+	Customer  int
+	Payment   string
+	Timestamp string
 }
 
 var UserNew User
 var RutasNew Rutas
 var DatosNew Datos
+var DatosFacturaNew DatosFactura
+var DatosGenerarFacturaNew DatosGenerarFactura
 var TipoFiltroNew TipoFiltro
 var ListaNuevaSimple = Estructuras2.New_Lista()
 var ListaNuevaCola = Estructuras2.New_ListaCola()
 var ListaNuevaArbol = Estructuras2.New_Arbol()
 var ListaNuevaDispersa = Estructuras2.NewMatriz()
+var ListaNuevaGrafo = Estructuras2.New_Grafo()
 
 func main() {
 	tree = &Estructuras2.Arbol{Raiz: nil}
@@ -130,6 +142,8 @@ func main() {
 
 	r.HandleFunc("/MostrarFiltros", mostrarFiltros).Methods("GET")
 
+	r.HandleFunc("/MostrarDatosFactura", MostrarDatosFactura).Methods("GET")
+
 	r.HandleFunc("/GenerarFactura", GenerarFactura).Methods("POST")
 
 	//menu adminisrador
@@ -157,7 +171,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	if UserNew.Username == "admin" && UserNew.Password == "admin" {
+	if UserNew.Username == "ADMIN_202004822" && UserNew.Password == "Admin" {
 
 		UserNew.Admin = true
 		json.NewEncoder(w).Encode(UserNew)
@@ -165,6 +179,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		IDEMPLEADO, _ := strconv.Atoi(UserNew.Username)
 
 		fmt.Println(IDEMPLEADO, UserNew.Password)
+
 		comprobar := ListaNuevaSimple.BuscarEmpleado(IDEMPLEADO, UserNew.Password)
 
 		if comprobar == nil {
@@ -172,6 +187,8 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		} else {
 			w.WriteHeader(http.StatusCreated)
 			UserNew.Admin = false
+			DatosFacturaNew.Id_Empleado = IDEMPLEADO
+			EmpleadoActual = UserNew.Username
 			json.NewEncoder(w).Encode(UserNew)
 
 		}
@@ -308,29 +325,50 @@ func Filtros(w http.ResponseWriter, req *http.Request) {
 	Id, image := ListaNuevaCola.MostrarPrimerValor()
 	fmt.Println(Id, image)
 
+	idClientInt, _ := strconv.Atoi(Id)
+
+	// crear fecha actual
+	t := time.Now()
+	fecha := t.Format("02-01-2006")
+	fmt.Println(fecha)
+
+	//creamos la hora actual con minutos y segundos
+	hora := t.Format("15:04:05")
+	fmt.Println(hora)
+
+	DatosFacturaNew.Fecha = (fecha + "-::" + hora)
+
+	DatosFacturaNew.Id_Cliente = idClientInt
+
 	generarMatrizOriginal(Id, image)
 
 	//descolamos
-	//ListaNuevaCola.Descolar()
+	//ListaNuevaCola.Des()
 
 	if TipoFiltroNew.Filtro == "Negativo" {
 		fmt.Println("Estas en Negativo")
+		ListaNuevaGrafo.InsertarValores(EmpleadoActual, Id, image, "Negativo")
 		generarMatrizNegativo(Id, image)
 
 	}
 	if TipoFiltroNew.Filtro == "EscalaGrises" {
 		fmt.Println("Estas en EscalaGrises")
+		ListaNuevaGrafo.InsertarValores(EmpleadoActual, Id, image, "EscalaGrises")
 		generarMatrizGray(Id, image)
 	}
 
 	if TipoFiltroNew.Filtro == "EspejoX" {
 		fmt.Println("Estas en EspejoX")
+		ListaNuevaGrafo.InsertarValores(EmpleadoActual, Id, image, "EspejoX")
 		generarMatrizX(Id, image)
 	}
 	if TipoFiltroNew.Filtro == "EspejoY" {
 		fmt.Println("Estas en EspejoY")
+		ListaNuevaGrafo.InsertarValores(EmpleadoActual, Id, image, "EspejoY")
+		generarMatrizY(Id, image)
 	}
 
+	ListaNuevaGrafo.Reporte()
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(TipoFiltroNew)
@@ -577,6 +615,124 @@ func generarMatrizX(id string, image string) {
 
 }
 
+func generarMatrizY(id string, image string) {
+	ListaNuevaDispersa = Estructuras2.NewMatriz()
+	Layer := []int{}
+	File := []string{}
+	//Config := []string{}
+	//Value := []int{}
+	image_width := 0
+	image_height := 0
+	pixel_width := 0
+	pixel_height := 0
+
+	ruta := "csv/" + image + "/inicial.csv"
+	fmt.Println("La ruta es:  " + ruta)
+
+	file, err := os.Open(ruta)
+	if err != nil {
+		fmt.Println(err)
+	}
+	records, err := csv.NewReader(file).ReadAll()
+	if err != nil {
+		return
+	}
+	for _, record := range records {
+		if (record[0] == "Layer") || (record[0] == "layer") {
+			continue
+		}
+
+		sv, _ := strconv.Atoi(record[0])
+		Layer = append(Layer, sv)
+		File = append(File, record[1])
+
+	}
+	/*fmt.Println("Layer:  ", Layer)
+	fmt.Println("File:  ", File)*/
+
+	for i := 0; i < len(Layer); i++ {
+		if Layer[i] == 0 {
+			config := File[i]
+			fmt.Println("La config es:  " + config)
+
+			rutaconfig := "csv/" + image + "/" + config
+
+			file2, err2 := os.Open(rutaconfig)
+			if err2 != nil {
+				fmt.Println(err2)
+			}
+			records2, err2 := csv.NewReader(file2).ReadAll()
+			if err2 != nil {
+				return
+			}
+			for _, record2 := range records2 {
+				if (record2[0] == "config") || (record2[0] == "Config") {
+					continue
+				}
+				if record2[0] == "image_width" {
+					image_width, _ = strconv.Atoi(record2[1])
+				}
+
+				if record2[0] == "image_height" {
+					image_height, _ = strconv.Atoi(record2[1])
+				}
+				if record2[0] == "pixel_width" {
+					pixel_width, _ = strconv.Atoi(record2[1])
+				}
+				if record2[0] == "pixel_height" {
+					pixel_height, _ = strconv.Atoi(record2[1])
+				}
+
+			}
+			ListaNuevaDispersa.MandarData(image_width, image_height, pixel_width, pixel_height, image+"EspejoY")
+			fmt.Println("image_width:  ", image_width, "image_height:  ", image_height, "pixel_width:  ", pixel_width, "pixel_height:  ", pixel_height)
+
+		} else {
+			fmt.Println("Si entrooo")
+
+			rutaCapa := "csv/" + image + "/" + File[i]
+
+			file, err := os.Open(rutaCapa)
+			if err != nil {
+				fmt.Println("No pude abrir el archivo")
+				return
+			}
+			defer file.Close()
+
+			lectura := csv.NewReader(file)
+			lectura.Comma = ','
+			x := 0
+			y := 0
+			for {
+				linea, err := lectura.Read()
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					fmt.Println("No pude leer la linea del csv")
+					continue
+				}
+				for i := 0; i < len(linea); i++ {
+					if linea[i] != "x" {
+						//ListaNuevaDispersa.AgregarElementos(x, y, linea[i])
+						//matriz.AgregarElementos(x, y, linea[i])
+						ListaNuevaDispersa.AgregarElementos(x, y, linea[i])
+
+					}
+					x++
+				}
+				x = 0
+				y++
+			}
+
+		}
+
+	}
+
+	ListaNuevaDispersa.CssY()
+
+}
+
 func generarMatrizGray(id string, image string) {
 	ListaNuevaDispersa = Estructuras2.NewMatriz()
 	Layer := []int{}
@@ -812,18 +968,24 @@ func generarMatrizNegativo(id string, image string) {
 	ListaNuevaDispersa.CssNegativo()
 }
 
+func MostrarDatosFactura(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(&DatosFacturaNew)
+
+}
 func GenerarFactura(w http.ResponseWriter, req *http.Request) {
 	reqBody, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		fmt.Fprintf(w, "No es valido!!")
 	}
-	json.Unmarshal(reqBody, &DatosNew)
-
-	ListaNuevaCola.Descolar()
+	json.Unmarshal(reqBody, &DatosGenerarFacturaNew)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(DatosNew)
+	json.NewEncoder(w).Encode(DatosGenerarFacturaNew)
+
+	ListaNuevaCola.Descolar()
 
 }

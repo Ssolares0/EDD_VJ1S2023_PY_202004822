@@ -37,6 +37,10 @@ export const Empleado = () => {
                         <span className="button__text">Generar Factura</span>
                         <i className="button__icon fas fa-chevron-right"></i>
                     </button>
+                    <button className="button login__submit"  value="Generar Factura"type= "button" id="facturaext" >
+                        <span className="button__text">Mostrar Factura extendida</span>
+                        <i className="button__icon fas fa-chevron-right"></i>
+                    </button>
                     <button className="button login__submit"  value="Cerrar sesión"  type= "button"onClick={cerrarSesion}>
                         <span className="button__text">Cerrar Sesion</span>
                         <i className="button__icon fas fa-chevron-right"></i>
